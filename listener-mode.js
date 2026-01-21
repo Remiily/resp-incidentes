@@ -361,6 +361,110 @@ function generateStudyCards() {
         {
             question: "¿Qué es MTTC y cuál es el objetivo?",
             answer: "Mean Time To Contain - tiempo promedio desde la detección hasta la contención. Objetivo: menos de 2 horas para Severity 1."
+        },
+        {
+            question: "¿Cuál es el objetivo principal del resumen ejecutivo del plan?",
+            answer: "Proporcionar una visión general del plan de gestión de incidentes, destacando la importancia de proteger información financiera y personal sensible, minimizar impacto (800K CLP/hora), cumplir regulaciones (Ley Fintech 21.521), y mantener confianza de clientes."
+        },
+        {
+            question: "¿Qué información debe incluir el resumen ejecutivo?",
+            answer: "Estructura organizacional (CSIRT y Comité de Crisis), procesos clave (triage, clasificación, playbooks), cumplimiento regulatorio, objetivos de tiempo (RTO, RPO, SLAs), herramientas y tecnologías, y compromiso con mejora continua."
+        },
+        {
+            question: "¿Cuáles son los 5 pasos del proceso de triage?",
+            answer: "1) Detección - alerta SIEM o reporte, 2) Confirmación - validar incidente real, 3) Clasificación - asignar severidad S1-S4, 4) Asignación - equipo CSIRT apropiado, 5) Contención inmediata - acciones rápidas para detener propagación."
+        },
+        {
+            question: "¿En cuánto tiempo debe completarse el triage para incidentes críticos?",
+            answer: "Menos de 30 minutos desde la detección inicial. Esto permite activación rápida del Comité de Crisis y contención inmediata para minimizar el impacto."
+        },
+        {
+            question: "¿Qué logs deben preservarse como evidencia mínima?",
+            answer: "Cloud Logs, Firewall logs, logs de autenticación IAM, logs de aplicación, logs de bases de datos, logs de SIEM. Todos los logs de los últimos 90 días deben estar disponibles para análisis forense."
+        },
+        {
+            question: "¿Qué metadatos son críticos para la evidencia?",
+            answer: "Timestamps UTC, IPs origen/destino, usuarios/cuentas afectadas, hashes SHA-256 de archivos, User-Agents, sesiones/tokens activos. Estos metadatos permiten reconstruir el timeline del incidente y rastrear la actividad del atacante."
+        },
+        {
+            question: "¿Cuántos pasos tiene un playbook operativo estándar?",
+            answer: "7 pasos: 1) Detección, 2) Confirmación, 3) Clasificación, 4) Contención inmediata, 5) Eradicación, 6) Recuperación, 7) Post-incidente. Cada paso incluye actividades específicas, herramientas, tiempos objetivos y validaciones."
+        },
+        {
+            question: "¿Cuál es el tiempo objetivo para contención inmediata?",
+            answer: "Menos de 30 minutos desde la confirmación del incidente. Esto incluye revocar credenciales, bloquear IPs, aislar sistemas, y deshabilitar cuentas comprometidas."
+        },
+        {
+            question: "¿Qué diferencia hay entre contención y erradicación?",
+            answer: "Contención: acciones rápidas para detener propagación (<30 min). Erradicación: eliminación completa de la amenaza del entorno (eliminar cuentas maliciosas, restaurar configuraciones, eliminar backdoors) - se realiza después de contención y preservación de evidencia."
+        },
+        {
+            question: "¿Cuántos items debe tener un checklist de contención rápida?",
+            answer: "Mínimo 6-8 items críticos: desconectar red, bloquear IPs, suspender cuentas, rotar credenciales, forzar reseteo de contraseñas, deshabilitar accesos remotos, aislar sistemas, preservar evidencia. Cada item debe ser verificable con responsable asignado."
+        },
+        {
+            question: "¿Qué establece la Ley Fintech 21.521 sobre notificación de incidentes?",
+            answer: "Notificación obligatoria a la CMF dentro de 24 horas desde la detección del incidente. El reporte debe incluir descripción, alcance, sistemas afectados, datos comprometidos, impacto estimado, medidas correctivas y estado actual."
+        },
+        {
+            question: "¿Cuáles son las sanciones por incumplimiento de la Ley Fintech?",
+            answer: "Hasta 1.000 UTM (Unidades Tributarias Mensuales) según la gravedad del incumplimiento. Además, la CMF puede ordenar medidas correctivas, auditorías especiales, y en casos graves, suspensión de operaciones."
+        },
+        {
+            question: "¿Qué marcos internacionales aplican al plan de Cumplo?",
+            answer: "ISO/IEC 27001:2022 (gestión de seguridad), NIST Cybersecurity Framework 2.0 (identificar, proteger, detectar, responder, recuperar), PCI DSS v4.0 (si procesa pagos), NIST SP 800-61 (manejo de incidentes), SANS Incident Response Process."
+        },
+        {
+            question: "¿Cuál es la diferencia entre ISO 27001 y NIST Framework?",
+            answer: "ISO 27001 es un estándar certificable de gestión de seguridad de la información con requisitos específicos. NIST Framework es una guía de mejores prácticas estructurada en 5 funciones (identificar, proteger, detectar, responder, recuperar). Cumplo debe alinear su plan con ambos para certificación y cumplimiento."
+        },
+        {
+            question: "¿Qué es el principio de menor privilegio en seguridad?",
+            answer: "Principio que establece que usuarios y sistemas deben tener solo los permisos mínimos necesarios para realizar sus funciones. Limita el impacto de un compromiso de credenciales y es parte del modelo Zero Trust que Cumplo planea implementar."
+        },
+        {
+            question: "¿Qué es un IoC (Indicator of Compromise) y ejemplos?",
+            answer: "Evidencia de actividad maliciosa. Ejemplos: IPs maliciosas conocidas, dominios sospechosos, hashes SHA-256 de archivos maliciosos, patrones de comportamiento anómalo (accesos fuera de horario, volúmenes inusuales de datos), cadenas de comando sospechosas. Se utilizan para detección temprana y búsqueda en logs."
+        },
+        {
+            question: "¿Cómo se preserva la integridad de la evidencia digital?",
+            answer: "Generando hashes SHA-256 de todos los artefactos antes y después de cada transferencia, almacenando en S3 con versionado, acceso restringido (solo CSIRT y Legal), encriptación AES-256, acceso auditado y registrado, cadena de custodia documentada, retención mínima 7 años."
+        },
+        {
+            question: "¿Qué es el modelo Zero Trust y por qué es importante?",
+            answer: "Modelo de seguridad que asume que ninguna entidad (usuario, dispositivo, red) es confiable por defecto. Requiere verificación continua. Importante porque: protege contra compromiso de credenciales, limita acceso lateral, requiere MFA constante, segmenta la red, aplica principio de menor privilegio. Es una mejora estructural planificada para Cumplo."
+        },
+        {
+            question: "¿Cuáles son los quick wins del plan de mejoras?",
+            answer: "2FA obligatorio en cuentas privilegiadas, actualizar firmas EDR/SIEM, reforzar políticas de contraseñas, simulacros phishing mensuales, mejorar documentación de playbooks. Tiempo de implementación: 1-2 semanas. Impacto inmediato en seguridad sin cambios estructurales mayores."
+        },
+        {
+            question: "¿Cuáles son los cambios estructurales planificados?",
+            answer: "Implementar SOAR (automatización), Red Team trimestral, Bug Bounty program, arquitectura Zero Trust, SOC 24/7, certificación ISO 27001, alineación NIST Framework. Tiempo de implementación: 1-6 meses. Requieren inversión significativa pero mejoran la postura de seguridad a largo plazo."
+        },
+        {
+            question: "¿Qué es SOAR y qué beneficios aporta?",
+            answer: "Security Orchestration, Automation and Response. Automatiza y orquesta tareas de respuesta a incidentes. Beneficios: reducción de tiempo de respuesta, consistencia en ejecución de playbooks, integración de herramientas (SIEM, EDR, ticketing), escalamiento automático según reglas, documentación automática de acciones."
+        },
+        {
+            question: "¿Cuál es la estructura del equipo CSIRT?",
+            answer: "Líder Técnico (coordinación técnica), Analistas de Seguridad (monitoreo SIEM, análisis de logs, IoCs), Ingenieros de Red (contención de red, bloqueo IPs), Desarrolladores (parches de seguridad, mitigación vulnerabilidades), Forenses Digitales (recolección de evidencia, análisis forense, cadena de custodia)."
+        },
+        {
+            question: "¿Qué es la matriz RACI y cómo se aplica?",
+            answer: "Responsible (ejecuta la tarea), Accountable (responsable final), Consulted (se consulta), Informed (se informa). Define roles claros en cada fase: Detección (Analista R, CISO A), Contención (Ingeniero Red R, Líder Técnico A), Eradicación (Desarrolladores R, Arquitecto Seguridad A), Recuperación (Ingenieros Operaciones R, CTO A), Comunicación (Gerente Comunicaciones R, CEO A), Reporte Regulatorio (Legal R, CEO A)."
+        },
+        {
+            question: "¿Cuáles son los criterios de activación del Comité de Cibercrisis?",
+            answer: "Severidad Crítica confirmada, impacto en múltiples sistemas críticos, exposición masiva de datos (>10,000 registros), requisito regulatorio, impacto financiero >5M CLP, interrupción >4 horas. El CISO evalúa y recomienda, CEO aprueba, notificación inmediata a miembros (máx. 15 min), primera reunión dentro de 30 minutos."
+        },
+        {
+            question: "¿Qué es el plan de continuidad del negocio (BCP)?",
+            answer: "Plan para mantener operaciones durante y después de un incidente. Incluye: RTO 4 horas para servicios críticos, RPO 1 hora máximo de pérdida de datos, prioridad de restauración (1) Sitio Pagadores, 2) APIs de transacciones, 3) Portal de clientes), backups incrementales cada hora, completos diarios, almacenados en S3 con versionado y cifrado AES-256, réplica en región diferente."
+        },
+        {
+            question: "¿Cómo se valida que un incidente está completamente resuelto?",
+            answer: "Servicios críticos operativos y validados funcionalmente, monitoreo estable sin anomalías por mínimo 24 horas, evidencia preservada y análisis forense iniciado, comunicación con stakeholders completada, reportes regulatorios enviados, AAR programado dentro de 2-5 días, plan de acción de mejoras documentado, playbooks actualizados con lecciones aprendidas, no hay indicadores de actividad maliciosa residual. Solo CISO o Líder Técnico puede cerrar oficialmente Severity 1-2."
         }
     ];
     

@@ -101,6 +101,62 @@ const qaData = [
     {
         question: "¿Qué es MTTD, MTTR, MTTC y cómo se miden?",
         answer: "MTTD (Mean Time To Detect): Tiempo promedio desde que ocurre el incidente hasta que se detecta. Objetivo <1 hora. MTTR (Mean Time To Respond): Tiempo promedio desde detección hasta primera respuesta. Objetivo <30 minutos. MTTC (Mean Time To Contain): Tiempo promedio desde detección hasta contención completa. Objetivo <2 horas para Severity 1. MTTR también puede ser Mean Time To Recover: Tiempo hasta recuperación completa. Objetivo <4 horas. Se miden desde timestamps en logs y bitácora del incidente. Son KPIs críticos para evaluar la efectividad del plan."
+    },
+    {
+        question: "¿Cuál es el resumen ejecutivo del plan de gestión de incidentes de Cumplo?",
+        answer: "Cumplo ha desarrollado un plan integral de gestión de incidentes de seguridad que protege información financiera y personal sensible. El plan incluye: estructura organizacional (CSIRT y Comité de Crisis), procesos de triage y clasificación (4 niveles de severidad), playbooks operativos detallados, evidencia mínima y cadena de custodia, comunicación estructurada con stakeholders, cumplimiento regulatorio (Ley Fintech 21.521, CMF), y mejora continua. El objetivo es minimizar impacto (800K CLP/hora de downtime), cumplir con regulaciones, y mantener la confianza de clientes."
+    },
+    {
+        question: "¿Qué es el triage de incidentes y cuáles son sus pasos?",
+        answer: "El triage es el proceso de evaluación inicial y clasificación de un incidente. Pasos: 1) Detección - alerta SIEM, reporte o monitoreo proactivo, 2) Confirmación - validar que es un incidente real (no falso positivo), 3) Clasificación - asignar severidad (S1-S4) basado en impacto operacional, financiero, reputacional y regulatorio, 4) Asignación - asignar al equipo CSIRT apropiado según severidad, 5) Contención inmediata - acciones rápidas para detener propagación. El triage debe completarse en menos de 30 minutos para incidentes críticos."
+    },
+    {
+        question: "¿Qué evidencia mínima se debe recolectar durante el triage?",
+        answer: "Durante el triage se debe preservar: Logs (Cloud Logs, Firewall, IAM, aplicación, BD, SIEM - últimos 90 días), Metadatos (timestamps UTC, IPs origen/destino, usuarios/cuentas afectadas, hashes SHA-256 de archivos, User-Agents, sesiones/tokens activos), Capturas (screenshots de alertas, configuraciones IAM antes/después, estado de permisos). Todo debe documentarse con timestamp y responsable, iniciando la cadena de custodia inmediatamente."
+    },
+    {
+        question: "¿Cuáles son los componentes clave de un playbook operativo?",
+        answer: "Un playbook operativo incluye: 1) Detección - cómo identificar el incidente (alertas, síntomas, herramientas), 2) Confirmación - pasos para validar el incidente real, 3) Clasificación - criterios de severidad, 4) Contención inmediata - acciones rápidas (<30 min) para detener propagación, 5) Eradicación - eliminación completa de la amenaza, 6) Recuperación - restauración de servicios (RTO <4h, RPO <1h), 7) Post-incidente - AAR, lecciones aprendidas, actualización del playbook. Cada paso incluye actividades específicas, herramientas, tiempos objetivos y validaciones."
+    },
+    {
+        question: "¿Qué debe incluir un checklist operativo de contención rápida?",
+        answer: "Un checklist de contención rápida debe incluir: 1) Desconectar red de sistemas comprometidos, 2) Bloquear IPs maliciosas en WAF/Firewall, 3) Suspender cuentas de usuario/servicio comprometidas, 4) Rotar credenciales de APIs y bases de datos, 5) Forzar reseteo de contraseñas de usuarios afectados, 6) Deshabilitar accesos remotos no esenciales, 7) Aislar sistemas afectados, 8) Preservar evidencia antes de cambios. Cada item debe ser verificable, con responsable asignado y tiempo objetivo (<30 minutos total)."
+    },
+    {
+        question: "¿Qué establece la Ley Fintech 21.521 sobre gestión de incidentes?",
+        answer: "La Ley Fintech 21.521 (2023) establece: 1) Controles robustos de ciberseguridad obligatorios, 2) Gestión de riesgos operacionales y de seguridad, 3) Planes de continuidad del negocio, 4) Notificación obligatoria a la CMF dentro de 24 horas desde la detección del incidente, 5) Reportes formales con descripción, alcance, impacto y medidas correctivas, 6) Supervisión y auditorías periódicas por parte de la CMF, 7) Sanciones por incumplimiento (hasta 1.000 UTM). Aplica a todas las instituciones financieras tecnológicas en Chile."
+    },
+    {
+        question: "¿Qué marcos y estándares aplican al plan de Cumplo?",
+        answer: "Los marcos aplicables son: ISO/IEC 27001:2022 (gestión de seguridad de la información), NIST Cybersecurity Framework 2.0 (identificar, proteger, detectar, responder, recuperar), PCI DSS v4.0 (si procesa pagos con tarjetas), NIST SP 800-61 (guía de manejo de incidentes), SANS Incident Response Process, OWASP Incident Response Guide. Cumplo debe alinear su plan con estos estándares para certificación ISO 27001 y cumplimiento regulatorio."
+    },
+    {
+        question: "¿Cuál es la estructura del Comité de Cibercrisis y sus responsabilidades?",
+        answer: "El Comité incluye: Líder de Crisis (CEO) - decisiones estratégicas finales, aprobación comunicaciones externas; Coordinador IR (CISO) - coordinación técnica CSIRT, reportes de estado; Comunicaciones (Gerente Marketing/RR.PP.) - gestión de mensajes internos/externos; Legal - asesoría regulatoria, reportes a autoridades; Operaciones (CTO) - recursos técnicos, coordinación equipos. Se activa en Severity 1, impacto masivo, o requisito regulatorio. Primera reunión dentro de 30 minutos, cadencia cada 2-4 horas durante incidente activo."
+    },
+    {
+        question: "¿Cómo se documenta y reporta un incidente según las regulaciones chilenas?",
+        answer: "La documentación incluye: Bitácora del incidente (timeline detallado, acciones tomadas, responsables), Evidencia preservada (logs, metadatos, capturas con cadena de custodia), Análisis de impacto (operacional, financiero, reputacional, regulatorio), Medidas correctivas implementadas, Medidas preventivas planificadas. El reporte a CMF debe enviarse dentro de 24 horas en formato según Circular CMF, incluyendo: descripción, alcance, sistemas afectados, datos comprometidos, timeline, impacto estimado, medidas y estado actual."
+    },
+    {
+        question: "¿Qué es la cadena de custodia y por qué es crítica?",
+        answer: "La cadena de custodia es la documentación de cada transferencia de evidencia desde su recolección hasta su presentación. Debe incluir: timestamp de cada transferencia, responsable de cada paso, ubicación de almacenamiento, método de preservación, verificación de integridad (hashes SHA-256). Es crítica porque: 1) Asegura admisibilidad legal de evidencia, 2) Previene manipulación o contaminación, 3) Cumple requisitos regulatorios, 4) Permite trazabilidad completa, 5) Protege en caso de litigios. La cadena debe mantenerse intacta durante mínimo 7 años según regulaciones financieras."
+    },
+    {
+        question: "¿Cuáles son los tiempos objetivos (SLAs) del plan de Cumplo?",
+        answer: "SLAs establecidos: Detección <1 hora desde ocurrencia, Primera respuesta <30 minutos desde detección, Contención crítica <2 horas para Severity 1, Notificación interna <1 hora a stakeholders clave, Notificación externa clientes <4 horas, Reporte regulador CMF <24 horas obligatorio, Recuperación servicios críticos <4 horas (RTO), Pérdida máxima de datos <1 hora (RPO), AAR programado 2-5 días después de resolución. Estos tiempos se monitorean como KPIs y se reportan trimestralmente."
+    },
+    {
+        question: "¿Qué herramientas de monitoreo y detección se utilizan?",
+        answer: "Herramientas principales: SIEM (Splunk/ELK) - correlación de eventos, detección de anomalías, análisis de logs; EDR (CrowdStrike/SentinelOne) - detección y respuesta en endpoints, análisis de comportamiento; Cloud Logs (AWS CloudWatch, Google Cloud Logging) - monitoreo de infraestructura cloud; Firewall logs - análisis de tráfico de red; IAM logs - monitoreo de accesos y cambios de permisos. Todas integradas para detección temprana y respuesta automatizada cuando sea posible."
+    },
+    {
+        question: "¿Cómo se clasifica la severidad de un incidente?",
+        answer: "La severidad se clasifica considerando: Impacto operacional (disponibilidad de servicios críticos), Impacto financiero (costos directos e indirectos, multas), Impacto reputacional (confianza de clientes, exposición mediática), Impacto regulatorio (cumplimiento normativo, sanciones), Alcance de datos (volumen y sensibilidad de datos afectados). Severity 1 (Crítico): Pérdida masiva, interrupción total, MTTR <2h. Severity 2 (Alto): Datos sensibles, interrupción parcial, MTTR <4h. Severity 3 (Medio): Acceso no autorizado no crítico, MTTR <8h. Severity 4 (Bajo): Eventos menores, MTTR <24h."
+    },
+    {
+        question: "¿Qué es un After Action Review (AAR) y qué resultados genera?",
+        answer: "El AAR es un proceso estructurado de análisis post-incidente realizado 2-5 días después de la resolución (para Severity 1-2). Participan: CSIRT completo, Comité de Crisis, stakeholders relevantes, facilitador neutral. Duración: 2-4 horas. Preguntas clave: ¿Qué funcionó bien? ¿Qué no funcionó? ¿Por qué ocurrió? ¿Qué mejoraríamos? Resultados: Informe de lecciones aprendidas, Plan de acción con quick wins (1-2 semanas) y mejoras estructurales (1-6 meses), Actualización de playbooks y procedimientos, Recomendaciones de capacitación."
     }
 ];
 

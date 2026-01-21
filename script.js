@@ -176,33 +176,85 @@ function initializePlaybookSteps() {
             const stepNum = parseInt(step.getAttribute('data-step') || '1');
             if (stepNum > 1) {
                 stepContent.style.display = 'none';
+                stepContent.style.maxHeight = '0';
+                stepContent.style.opacity = '0';
                 toggleBtn.textContent = '▶';
+            } else {
+                // First step expanded by default
+                stepContent.style.display = 'block';
+                stepContent.style.maxHeight = 'none';
+                stepContent.style.opacity = '1';
+                toggleBtn.textContent = '▼';
             }
             
+            // Add click handler to toggle button
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 toggleStep(step, stepContent, toggleBtn);
             });
+            
+            // Also allow clicking on step header
+            const stepHeader = step.querySelector('.step-header');
+            if (stepHeader) {
+                stepHeader.addEventListener('click', (e) => {
+                    if (e.target !== toggleBtn && !toggleBtn.contains(e.target)) {
+                        e.stopPropagation();
+                        toggleStep(step, stepContent, toggleBtn);
+                    }
+                });
+            }
         }
     });
 }
 
 function toggleStep(step, stepContent, toggleBtn) {
-    const isExpanded = stepContent.style.display !== 'none';
+    const isExpanded = stepContent.style.display !== 'none' && stepContent.style.display !== '';
     
     if (isExpanded) {
-        stepContent.style.display = 'none';
+        // Collapse
+        stepContent.style.maxHeight = stepContent.scrollHeight + 'px';
+        // Force reflow
+        stepContent.offsetHeight;
+        stepContent.style.maxHeight = '0';
+        stepContent.style.opacity = '0';
+        stepContent.style.overflow = 'hidden';
+        
+        setTimeout(() => {
+            stepContent.style.display = 'none';
+        }, 300);
+        
         toggleBtn.textContent = '▶';
         step.classList.remove('expanded');
     } else {
+        // Expand
         stepContent.style.display = 'block';
+        stepContent.style.maxHeight = '0';
+        stepContent.style.opacity = '0';
+        stepContent.style.overflow = 'hidden';
+        
+        // Force reflow
+        stepContent.offsetHeight;
+        
+        stepContent.style.maxHeight = stepContent.scrollHeight + 'px';
+        stepContent.style.opacity = '1';
+        
+        setTimeout(() => {
+            stepContent.style.maxHeight = 'none';
+            stepContent.style.overflow = 'visible';
+        }, 300);
+        
         toggleBtn.textContent = '▼';
         step.classList.add('expanded');
         
-        // Smooth scroll to step if needed
+        // Smooth scroll to step if needed (only if not fully visible)
         setTimeout(() => {
-            step.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 100);
+            const rect = step.getBoundingClientRect();
+            const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+            if (!isVisible) {
+                step.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }, 350);
     }
 }
 
