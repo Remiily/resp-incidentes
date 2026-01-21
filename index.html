@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan de Gestión de Incidentes - Cumplo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Edit Mode Toggle -->
+    <button id="editModeToggle" class="edit-mode-toggle" title="Activar/Desactivar modo edición">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+    </button>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Portada -->
+        <div class="slide active" data-slide="1">
+            <div class="slide-content portada-content">
+                <div class="logo-container">
+                    <div class="uai-logo">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="45" fill="#FFD700" stroke="#003366" stroke-width="3"/>
+                            <text x="50" y="65" font-size="40" font-weight="bold" text-anchor="middle" fill="#003366">UAI</text>
+                        </svg>
+                    </div>
+                </div>
+                <div class="portada-main">
+                    <h1 class="main-title editable" data-edit="text">Plan de Gestión de Incidentes</h1>
+                    <h2 class="subtitle editable" data-edit="text">Respuesta ante Incidentes y Recuperación ante Crisis</h2>
+                    <div class="company-info">
+                        <div class="company-badge">
+                            <h3 class="editable" data-edit="text">Cumplo</h3>
+                            <p class="company-tag editable" data-edit="text">Fintech | Financiamiento Colaborativo</p>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <div class="team-section">
+                            <p class="team-label editable" data-edit="text">Grupo 5</p>
+                            <div class="team-members editable" data-edit="text">
+                                <span>Eduardo Lucero</span>
+                                <span class="separator">•</span>
+                                <span>José Antonio Montero</span>
+                                <span class="separator">•</span>
+                                <span>Rodrigo Flores</span>
+                                <span class="separator">•</span>
+                                <span>Gerson Cornejo</span>
+                            </div>
+                        </div>
+                        <p class="professor editable" data-edit="text"><strong>Profesor:</strong> Erich Oscar Zschaeck Medina</p>
+                    </div>
+                    <div class="version-info">
+                        <p class="editable" data-edit="text">Versión 2.0 | Enero 2026</p>
+                        <p class="university-name editable" data-edit="text">Universidad Adolfo Ibáñez</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Resumen Ejecutivo -->
+        <div class="slide" data-slide="2">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">1. Resumen Ejecutivo</h1>
+                <div class="content-grid">
+                    <!-- Dashboard de Métricas -->
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">📊</div>
+                        <h3 class="editable" data-edit="text">Dashboard de Métricas Clave</h3>
+                        <div class="metrics-dashboard">
+                            <div class="metric-item">
+                                <div class="metric-value">800K</div>
+                                <div class="metric-label">CLP/hora de indisponibilidad</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">24h</div>
+                                <div class="metric-label">Plazo reporte CMF</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">4h</div>
+                                <div class="metric-label">RTO servicios críticos</div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-value">1h</div>
+                                <div class="metric-label">RPO máximo</div>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="roiChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="editable" data-edit="text">Contexto de Cumplo</h3>
+                        <div class="chart-container-small">
+                            <canvas id="marketChart"></canvas>
+                        </div>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Fundación:</strong> 2012 - Líder en financiamiento colaborativo</li>
+                            <li class="editable" data-edit="text"><strong>Mercado:</strong> Chile (45%), México (35%), Perú (20%)</li>
+                            <li class="editable" data-edit="text"><strong>Modelo:</strong> Plataforma P2P para PYMEs, conectando inversionistas con empresas</li>
+                            <li class="editable" data-edit="text"><strong>Volumen:</strong> +1.000 millones USD acumulados en financiamiento</li>
+                            <li class="editable" data-edit="text"><strong>Impacto:</strong> +10.000 PYMEs apoyadas, generando empleo y crecimiento</li>
+                            <li class="editable" data-edit="text"><strong>Ecosistema:</strong> 84 fintech en Chile (7% de LatAm), mercado en crecimiento</li>
+                            <li class="editable" data-edit="text"><strong>Regulación:</strong> Ley Fintech 21.521 (2023) - Supervisión CMF</li>
+                            <li class="editable" data-edit="text"><strong>Infraestructura:</strong> Cloud-first (AWS, Google Cloud), APIs críticas 24/7</li>
+                            <li class="editable" data-edit="text"><strong>Datos:</strong> Información financiera, personal y tributaria de miles de usuarios</li>
+                        </ul>
+                    </div>
+                    <div class="content-card glass-card danger">
+                        <div class="card-icon">⚠️</div>
+                        <h3 class="editable" data-edit="text">Matriz de Impacto vs Probabilidad</h3>
+                        <div class="impact-matrix">
+                            <div class="matrix-grid">
+                                <div class="matrix-cell critical" data-impact="alto" data-prob="alta">
+                                    <strong>Crítico</strong>
+                                    <small>Ransomware, IAM comprometido</small>
+                                </div>
+                                <div class="matrix-cell high" data-impact="alto" data-prob="media">
+                                    <strong>Alto</strong>
+                                    <small>Exfiltración datos</small>
+                                </div>
+                                <div class="matrix-cell medium" data-impact="medio" data-prob="alta">
+                                    <strong>Medio</strong>
+                                    <small>DDoS, Phishing</small>
+                                </div>
+                                <div class="matrix-cell low" data-impact="bajo" data-prob="baja">
+                                    <strong>Bajo</strong>
+                                    <small>Eventos menores</small>
+                                </div>
+                            </div>
+                            <div class="matrix-labels">
+                                <span class="label-y">Alto Impacto</span>
+                                <span class="label-x">Alta Probabilidad</span>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Costo Operacional:</strong> 800.000 CLP/hora de indisponibilidad = ~19.2M CLP/día</li>
+                            <li class="editable" data-edit="text"><strong>Confianza:</strong> Miles de usuarios dependientes, pérdida de confianza = pérdida de negocio</li>
+                            <li class="editable" data-edit="text"><strong>Regulatorio:</strong> Multas CMF, suspensión de operaciones, pérdida de licencia</li>
+                            <li class="editable" data-edit="text"><strong>Reputación:</strong> 71% préstamos comerciales en región, impacto en marca y credibilidad</li>
+                            <li class="editable" data-edit="text"><strong>Operacional:</strong> Plataformas 24/7 críticas, interrupción afecta transacciones en tiempo real</li>
+                            <li class="editable" data-edit="text"><strong>Datos:</strong> Información financiera, personal y tributaria - exposición masiva</li>
+                            <li class="editable" data-edit="text"><strong>Legal:</strong> Demandas por violación de datos, responsabilidad civil y penal</li>
+                            <li class="editable" data-edit="text"><strong>Competitivo:</strong> Pérdida de ventaja competitiva, migración de clientes a competidores</li>
+                        </ul>
+                    </div>
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="editable" data-edit="text">Escenario Base del Incidente</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-time editable" data-edit="text">08:15 AM</div>
+                                <div class="timeline-content editable" data-edit="text">
+                                    <strong>Inicio:</strong> Email de phishing recibido por empleado administrativo
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-time editable" data-edit="text">08:40 AM</div>
+                                <div class="timeline-content editable" data-edit="text">
+                                    <strong>Compromiso:</strong> Credenciales con accesos privilegiados a IAM en Google Cloud comprometidas
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-time editable" data-edit="text">09:20 AM</div>
+                                <div class="timeline-content editable" data-edit="text">
+                                    <strong>Escalamiento:</strong> Operación desde AWS, creación de cuentas fraudulentas, manipulación de roles
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-time editable" data-edit="text">09:45 AM</div>
+                                <div class="timeline-content editable" data-edit="text">
+                                    <strong>Exfiltración:</strong> Datos sensibles transferidos a servicios externos (detectado parcialmente por firewall logs)
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-time editable" data-edit="text">10:00 AM</div>
+                                <div class="timeline-content editable" data-edit="text">
+                                    <strong>Detección:</strong> SIEM alerta sobre actividad anómala, CSIRT activado
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-time editable" data-edit="text">10:15 AM</div>
+                                <div class="timeline-content editable" data-edit="text">
+                                    <strong>Contención:</strong> Revocación de credenciales, aislamiento de sistemas afectados
+                                </div>
+                            </div>
+                        </div>
+                        <div class="attack-chain">
+                            <p><strong>Cadena de Ataque:</strong></p>
+                            <div class="chain-steps">
+                                <span class="chain-link editable" data-edit="text">Phishing</span>
+                                <span class="chain-arrow">→</span>
+                                <span class="chain-link editable" data-edit="text">IAM Comprometido</span>
+                                <span class="chain-arrow">→</span>
+                                <span class="chain-link editable" data-edit="text">AWS Infiltrado</span>
+                                <span class="chain-arrow">→</span>
+                                <span class="chain-link editable" data-edit="text">Exfiltración</span>
+                                <span class="chain-arrow">→</span>
+                                <span class="chain-link editable" data-edit="text">Cifrado</span>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="incidentTimelineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Triage y Evidencia Mínima -->
+        <div class="slide" data-slide="3">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">2. Triage y Evidencia Mínima</h1>
+                <div class="content-grid">
+                    <!-- Diagrama de Flujo de Triage -->
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">🔄</div>
+                        <h3 class="editable" data-edit="text">Flujo de Triage Interactivo</h3>
+                        <div class="triage-flow">
+                            <div class="flow-step" data-step="1">
+                                <div class="flow-icon">🔍</div>
+                                <div class="flow-title">Detección</div>
+                                <div class="flow-desc">Alerta SIEM o reporte</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step" data-step="2">
+                                <div class="flow-icon">✅</div>
+                                <div class="flow-title">Confirmación</div>
+                                <div class="flow-desc">Validar incidente real</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step" data-step="3">
+                                <div class="flow-icon">📊</div>
+                                <div class="flow-title">Clasificación</div>
+                                <div class="flow-desc">Severidad S1-S4</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step" data-step="4">
+                                <div class="flow-icon">👥</div>
+                                <div class="flow-title">Asignación</div>
+                                <div class="flow-desc">Recursos CSIRT</div>
+                            </div>
+                            <div class="flow-arrow">→</div>
+                            <div class="flow-step" data-step="5">
+                                <div class="flow-icon">📦</div>
+                                <div class="flow-title">Evidencia</div>
+                                <div class="flow-desc">Preservar logs</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">✅</div>
+                        <h3 class="editable" data-edit="text">Checklist Triage del Incidente</h3>
+                        <div class="checklist-container">
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">1</span>
+                                <span class="editable" data-edit="text">Confirmar naturaleza y alcance del incidente</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">2</span>
+                                <span class="editable" data-edit="text">Identificar sistemas, servicios y datos afectados</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">3</span>
+                                <span class="editable" data-edit="text">Evaluar impacto inicial (operacional, financiero, reputacional)</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">4</span>
+                                <span class="editable" data-edit="text">Clasificar severidad según modelo establecido</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">5</span>
+                                <span class="editable" data-edit="text">Asignar recursos del CSIRT según RACI</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">6</span>
+                                <span class="editable" data-edit="text">Documentar timestamp de detección y confirmación</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">7</span>
+                                <span class="editable" data-edit="text">Activar canales de comunicación según severidad</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">8</span>
+                                <span class="editable" data-edit="text">Iniciar preservación de evidencia (logs, screenshots, configuraciones)</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">9</span>
+                                <span class="editable" data-edit="text">Establecer bitácora del incidente con timestamps</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">10</span>
+                                <span class="editable" data-edit="text">Evaluar necesidad de activar Comité de Crisis</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="triageProgressChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📦</div>
+                        <h3 class="editable" data-edit="text">Evidencia Mínima Requerida</h3>
+                        <div class="evidence-types">
+                            <div class="evidence-type">
+                                <h4 class="editable" data-edit="text">🔍 Logs y Registros</h4>
+                                <ul>
+                                    <li class="editable" data-edit="text">Cloud Logs (AWS CloudWatch, Google Cloud Logging) - últimos 90 días</li>
+                                    <li class="editable" data-edit="text">Firewall logs (tráfico de red, conexiones sospechosas, IPs bloqueadas)</li>
+                                    <li class="editable" data-edit="text">Logs de autenticación (IAM, acceso a sistemas, cambios de permisos)</li>
+                                    <li class="editable" data-edit="text">Logs de aplicación (API calls, transacciones, errores)</li>
+                                    <li class="editable" data-edit="text">Logs de base de datos (queries, accesos, modificaciones)</li>
+                                    <li class="editable" data-edit="text">Logs de SIEM/Security tools (alertas, eventos de seguridad)</li>
+                                </ul>
+                            </div>
+                            <div class="evidence-type">
+                                <h4 class="editable" data-edit="text">📋 Metadatos</h4>
+                                <ul>
+                                    <li class="editable" data-edit="text">Timestamps precisos (UTC) con timezone y sincronización NTP</li>
+                                    <li class="editable" data-edit="text">IPs de origen y destino (IPv4/IPv6, geolocalización)</li>
+                                    <li class="editable" data-edit="text">Usuarios y cuentas involucradas (IDs, emails, roles)</li>
+                                    <li class="editable" data-edit="text">Hash de archivos modificados (SHA-256, MD5 para compatibilidad)</li>
+                                    <li class="editable" data-edit="text">User-Agents y headers HTTP relevantes</li>
+                                    <li class="editable" data-edit="text">Sesiones y tokens de autenticación comprometidos</li>
+                                </ul>
+                            </div>
+                            <div class="evidence-type">
+                                <h4 class="editable" data-edit="text">📸 Capturas y Estados</h4>
+                                <ul>
+                                    <li class="editable" data-edit="text">Screenshots del estado de sistemas</li>
+                                    <li class="editable" data-edit="text">Configuraciones de IAM antes/después</li>
+                                    <li class="editable" data-edit="text">Estado de permisos y roles</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🔒</div>
+                        <h3 class="editable" data-edit="text">Preservación y Custodia de Evidencia</h3>
+                        <div class="preservation-rules">
+                            <div class="rule-item">
+                                <strong class="editable" data-edit="text">Cadena de Custodia</strong>
+                                <p class="editable" data-edit="text">Documentar cada transferencia de evidencia con timestamp y responsable</p>
+                            </div>
+                            <div class="rule-item">
+                                <strong class="editable" data-edit="text">Almacenamiento Seguro</strong>
+                                <p class="editable" data-edit="text">Backup inmutable en S3 con versionado, acceso restringido, encriptación</p>
+                            </div>
+                            <div class="rule-item">
+                                <strong class="editable" data-edit="text">Acceso Restringido</strong>
+                                <p class="editable" data-edit="text">Solo miembros del CSIRT y Legal con justificación</p>
+                            </div>
+                            <div class="rule-item">
+                                <strong class="editable" data-edit="text">Retención</strong>
+                                <p class="editable" data-edit="text">Mínimo 7 años según regulaciones financieras chilenas</p>
+                            </div>
+                            <div class="rule-item">
+                                <strong class="editable" data-edit="text">Integridad</strong>
+                                <p class="editable" data-edit="text">Hashes SHA-256 de todos los artefactos para verificación</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="evidenceFlowChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Playbooks y Checklists Operativos -->
+        <div class="slide" data-slide="4">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">3. Playbooks y Checklists Operativos</h1>
+                <div class="playbook-container">
+                    <div class="content-card glass-card playbook-main">
+                        <div class="card-icon">📋</div>
+                        <h3 class="editable" data-edit="text">Playbook: Compromiso de IAM y Exfiltración de Datos</h3>
+                        <div class="playbook-steps">
+                            <div class="step interactive-step" data-step="1">
+                                <div class="step-header">
+                                    <span class="step-number">1</span>
+                                    <h4 class="editable" data-edit="text">Detección</h4>
+                                    <button class="step-toggle">▼</button>
+                                </div>
+                                <div class="step-content">
+                                    <p class="editable" data-edit="text"><strong>Actividades:</strong></p>
+                                    <ul>
+                                        <li class="editable" data-edit="text">Monitorear logs de IAM para accesos anómalos</li>
+                                        <li class="editable" data-edit="text">Revisar alertas de firewall por tráfico inusual</li>
+                                        <li class="editable" data-edit="text">Validar creación de cuentas fuera de horario</li>
+                                        <li class="editable" data-edit="text"><strong>Evidencia:</strong> Screenshots de logs, timestamps</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step interactive-step" data-step="2">
+                                <div class="step-header">
+                                    <span class="step-number">2</span>
+                                    <h4 class="editable" data-edit="text">Confirmación</h4>
+                                    <button class="step-toggle">▼</button>
+                                </div>
+                                <div class="step-content">
+                                    <p class="editable" data-edit="text"><strong>Actividades:</strong></p>
+                                    <ul>
+                                        <li class="editable" data-edit="text">Validar compromiso de cuenta privilegiada</li>
+                                        <li class="editable" data-edit="text">Verificar cambios no autorizados en roles IAM</li>
+                                        <li class="editable" data-edit="text">Confirmar acceso a datos sensibles</li>
+                                        <li class="editable" data-edit="text"><strong>Decisión:</strong> Clasificar severidad (Crítica/Alta)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step interactive-step" data-step="3">
+                                <div class="step-header">
+                                    <span class="step-number">3</span>
+                                    <h4 class="editable" data-edit="text">Contención Inmediata</h4>
+                                    <button class="step-toggle">▼</button>
+                                </div>
+                                <div class="step-content">
+                                    <p class="editable" data-edit="text"><strong>Actividades:</strong></p>
+                                    <ul>
+                                        <li class="editable" data-edit="text">Revocar todas las credenciales comprometidas</li>
+                                        <li class="editable" data-edit="text">Deshabilitar cuentas fraudulentas creadas</li>
+                                        <li class="editable" data-edit="text">Aislar sistemas afectados de la red</li>
+                                        <li class="editable" data-edit="text">Bloquear IPs de origen del atacante</li>
+                                        <li class="editable" data-edit="text"><strong>Tiempo objetivo:</strong> &lt;30 minutos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step interactive-step" data-step="4">
+                                <div class="step-header">
+                                    <span class="step-number">4</span>
+                                    <h4 class="editable" data-edit="text">Eradicación</h4>
+                                    <button class="step-toggle">▼</button>
+                                </div>
+                                <div class="step-content">
+                                    <p class="editable" data-edit="text"><strong>Actividades:</strong></p>
+                                    <ul>
+                                        <li class="editable" data-edit="text">Eliminar cuentas y roles maliciosos</li>
+                                        <li class="editable" data-edit="text">Restaurar configuraciones IAM a estado conocido seguro</li>
+                                        <li class="editable" data-edit="text">Eliminar backdoors o herramientas de persistencia</li>
+                                        <li class="editable" data-edit="text">Validar integridad de sistemas críticos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step interactive-step" data-step="5">
+                                <div class="step-header">
+                                    <span class="step-number">5</span>
+                                    <h4 class="editable" data-edit="text">Recuperación</h4>
+                                    <button class="step-toggle">▼</button>
+                                </div>
+                                <div class="step-content">
+                                    <p class="editable" data-edit="text"><strong>Actividades:</strong></p>
+                                    <ul>
+                                        <li class="editable" data-edit="text">Restaurar desde backups validados (último estado seguro)</li>
+                                        <li class="editable" data-edit="text">Validar funcionalidad de servicios críticos</li>
+                                        <li class="editable" data-edit="text">Monitoreo intensivo post-restauración</li>
+                                        <li class="editable" data-edit="text"><strong>Tiempo objetivo:</strong> &lt;4 horas para servicios críticos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="step interactive-step" data-step="6">
+                                <div class="step-header">
+                                    <span class="step-number">6</span>
+                                    <h4 class="editable" data-edit="text">Post-Incidente</h4>
+                                    <button class="step-toggle">▼</button>
+                                </div>
+                                <div class="step-content">
+                                    <p class="editable" data-edit="text"><strong>Actividades:</strong></p>
+                                    <ul>
+                                        <li class="editable" data-edit="text">After Action Review (2-5 días después)</li>
+                                        <li class="editable" data-edit="text">Documentar lecciones aprendidas</li>
+                                        <li class="editable" data-edit="text">Actualizar playbooks y controles</li>
+                                        <li class="editable" data-edit="text">Capacitación adicional si es necesario</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chart-container-medium">
+                            <canvas id="playbookFlowChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">✅</div>
+                        <h3 class="editable" data-edit="text">Checklist de Contención Rápida</h3>
+                        <div class="checklist-container">
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">1</span>
+                                <span class="editable" data-edit="text">Desconectar red de sistemas comprometidos</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">2</span>
+                                <span class="editable" data-edit="text">Bloquear IPs maliciosas en WAF/Firewall</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">3</span>
+                                <span class="editable" data-edit="text">Suspender cuentas de usuario/servicio comprometidas</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">4</span>
+                                <span class="editable" data-edit="text">Rotar credenciales de APIs y bases de datos</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">5</span>
+                                <span class="editable" data-edit="text">Forzar reseteo de contraseñas de usuarios afectados</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                            <div class="checklist-item interactive-checkbox" data-checked="false">
+                                <span class="check-number">6</span>
+                                <span class="editable" data-edit="text">Deshabilitar accesos remotos no esenciales</span>
+                                <button class="check-btn">✓</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Regulaciones y Marcos Aplicables -->
+        <div class="slide" data-slide="5">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">4. Regulaciones y Marcos Aplicables</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">📜</div>
+                        <h3 class="editable" data-edit="text">Ley Fintech (21.521)</h3>
+                        <div class="regulation-details">
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Promulgada:</strong> <span class="editable" data-edit="text">2023</span>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Requisitos de Ciberseguridad:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Controles robustos de seguridad de la información</li>
+                                    <li class="editable" data-edit="text">Gestión de riesgos operacionales</li>
+                                    <li class="editable" data-edit="text">Continuidad del negocio</li>
+                                </ul>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Notificación de Incidentes:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Obligatorio reportar a CMF dentro de 24 horas</li>
+                                    <li class="editable" data-edit="text">Información detallada sobre alcance e impacto</li>
+                                    <li class="editable" data-edit="text">Medidas correctivas implementadas</li>
+                                </ul>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Protección de Datos:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Datos personales y financieros de clientes - tratamiento seguro</li>
+                                    <li class="editable" data-edit="text">Derechos de los titulares - acceso, rectificación, cancelación</li>
+                                    <li class="editable" data-edit="text">Notificación de brechas de seguridad - dentro de 24 horas a CMF</li>
+                                    <li class="editable" data-edit="text">Consentimiento informado para tratamiento de datos</li>
+                                    <li class="editable" data-edit="text">Medidas técnicas y organizativas de seguridad</li>
+                                </ul>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Sanciones y Multas:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Multas de hasta 1.000 UTM por incumplimiento</li>
+                                    <li class="editable" data-edit="text">Suspensión temporal o definitiva de operaciones</li>
+                                    <li class="editable" data-edit="text">Responsabilidad civil y penal por daños a terceros</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🔒</div>
+                        <h3 class="editable" data-edit="text">Protección de Datos Personales</h3>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Ley 19.628:</strong> Protección de datos personales</li>
+                            <li class="editable" data-edit="text"><strong>Notificación de brechas:</strong> A titulares afectados</li>
+                            <li class="editable" data-edit="text"><strong>Derechos ARCO:</strong> Acceso, Rectificación, Cancelación, Oposición</li>
+                            <li class="editable" data-edit="text"><strong>Retención:</strong> Solo por tiempo necesario y con consentimiento</li>
+                        </ul>
+                        <div class="chart-container-small">
+                            <canvas id="dataProtectionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🏛️</div>
+                        <h3 class="editable" data-edit="text">CMF (Comisión para el Mercado Financiero)</h3>
+                        <div class="regulation-details">
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Supervisión:</strong>
+                                <p class="editable" data-edit="text">Supervisa a las entidades financieras y plataformas de financiamiento colaborativo</p>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Normativas de Seguridad:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Establece normativas de seguridad de la información</li>
+                                    <li class="editable" data-edit="text">Requiere planes de continuidad de negocio y recuperación</li>
+                                    <li class="editable" data-edit="text">Auditorías y reportes periódicos</li>
+                                </ul>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Reporte de Incidentes:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Notificación obligatoria dentro de 24 horas para incidentes críticos</li>
+                                    <li class="editable" data-edit="text">Formato según Circular CMF - información detallada requerida</li>
+                                    <li class="editable" data-edit="text">Seguimiento y actualizaciones periódicas hasta resolución</li>
+                                    <li class="editable" data-edit="text">Reporte final con lecciones aprendidas y medidas correctivas</li>
+                                </ul>
+                            </div>
+                            <div class="reg-item">
+                                <strong class="editable" data-edit="text">Auditorías y Supervisión:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Auditorías periódicas de seguridad de la información</li>
+                                    <li class="editable" data-edit="text">Revisión de planes de continuidad y recuperación</li>
+                                    <li class="editable" data-edit="text">Evaluación de controles de ciberseguridad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🌍</div>
+                        <h3 class="editable" data-edit="text">Estándares Internacionales</h3>
+                        <div class="standards-list">
+                            <div class="standard-item">
+                                <strong class="editable" data-edit="text">ISO 27001</strong>
+                                <p class="editable" data-edit="text">Sistema de Gestión de Seguridad de la Información</p>
+                            </div>
+                            <div class="standard-item">
+                                <strong class="editable" data-edit="text">NIST Cybersecurity Framework</strong>
+                                <p class="editable" data-edit="text">Identificar, Proteger, Detectar, Responder, Recuperar</p>
+                            </div>
+                            <div class="standard-item">
+                                <strong class="editable" data-edit="text">PCI DSS</strong>
+                                <p class="editable" data-edit="text">Para procesamiento de pagos (si aplica)</p>
+                            </div>
+                            <div class="standard-item">
+                                <strong class="editable" data-edit="text">Mejores Prácticas</strong>
+                                <p class="editable" data-edit="text">Basadas en experiencia de la industria fintech</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="standardsChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Matriz de Cumplimiento -->
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">📋</div>
+                        <h3 class="editable" data-edit="text">Matriz de Cumplimiento Regulatorio</h3>
+                        <div class="compliance-matrix">
+                            <table class="compliance-table">
+                                <thead>
+                                    <tr>
+                                        <th>Requisito</th>
+                                        <th>Ley Fintech</th>
+                                        <th>Ley 19.628</th>
+                                        <th>CMF</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Notificación de incidentes</td>
+                                        <td>✓ 24h</td>
+                                        <td>✓ 24h</td>
+                                        <td>✓ 24h</td>
+                                        <td><span class="status-compliant">Cumplido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Controles de seguridad</td>
+                                        <td>✓</td>
+                                        <td>✓</td>
+                                        <td>✓</td>
+                                        <td><span class="status-compliant">Cumplido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Plan de continuidad</td>
+                                        <td>✓</td>
+                                        <td>-</td>
+                                        <td>✓</td>
+                                        <td><span class="status-compliant">Cumplido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Protección de datos</td>
+                                        <td>✓</td>
+                                        <td>✓</td>
+                                        <td>✓</td>
+                                        <td><span class="status-compliant">Cumplido</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Auditorías periódicas</td>
+                                        <td>✓</td>
+                                        <td>-</td>
+                                        <td>✓</td>
+                                        <td><span class="status-pending">En proceso</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Timeline de Obligaciones -->
+                        <div class="regulatory-timeline">
+                            <h4 class="editable" data-edit="text">Timeline de Obligaciones</h4>
+                            <div class="timeline-item-reg">
+                                <div class="timeline-time-reg">0h</div>
+                                <div class="timeline-content-reg">Detección del incidente</div>
+                            </div>
+                            <div class="timeline-item-reg">
+                                <div class="timeline-time-reg">1h</div>
+                                <div class="timeline-content-reg">Notificación interna (CSIRT)</div>
+                            </div>
+                            <div class="timeline-item-reg">
+                                <div class="timeline-time-reg">24h</div>
+                                <div class="timeline-content-reg">Reporte obligatorio a CMF</div>
+                            </div>
+                            <div class="timeline-item-reg">
+                                <div class="timeline-time-reg">48h</div>
+                                <div class="timeline-content-reg">Notificación a afectados (si aplica)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Gobernanza y Roles -->
+        <div class="slide" data-slide="6">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">5. Gobernanza y Roles</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card">
+                        <div class="card-icon">👥</div>
+                        <h3 class="editable" data-edit="text">Comité de Crisis</h3>
+                        <div class="team-structure">
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Líder de Crisis (CEO/Gerente General)</strong>
+                                <p class="editable" data-edit="text">Decisiones estratégicas finales, aprobación de comunicaciones externas, asignación de recursos</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Coordinador de IR (CISO/Gerente de Seguridad)</strong>
+                                <p class="editable" data-edit="text">Coordinación técnica del CSIRT, reportes de estado, decisiones operacionales</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Comunicaciones (Gerente de Marketing/RR.PP.)</strong>
+                                <p class="editable" data-edit="text">Gestión de mensajes internos y externos, relación con medios, transparencia controlada</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Legal (Asesor Legal Interno/Externo)</strong>
+                                <p class="editable" data-edit="text">Asesoría regulatoria, reportes a autoridades, gestión de responsabilidades legales</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Operaciones (CTO/Gerente de Operaciones)</strong>
+                                <p class="editable" data-edit="text">Recursos técnicos, coordinación de equipos, impacto en procesos de negocio</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🛡️</div>
+                        <h3 class="editable" data-edit="text">Equipo de Respuesta a Incidentes (CSIRT)</h3>
+                        <div class="team-structure">
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Líder Técnico (Arquitecto de Seguridad)</strong>
+                                <p class="editable" data-edit="text">Coordinación técnica, decisiones de contención y erradicación</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Analistas de Seguridad</strong>
+                                <p class="editable" data-edit="text">Monitoreo SIEM, análisis de logs, identificación de IoCs, correlación de eventos</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Ingenieros de Red</strong>
+                                <p class="editable" data-edit="text">Contención de red, bloqueo de IPs, aislamiento de sistemas, configuración de firewall</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Desarrolladores</strong>
+                                <p class="editable" data-edit="text">Parches de seguridad, mitigación de vulnerabilidades, validación de código</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Forenses Digitales</strong>
+                                <p class="editable" data-edit="text">Recolección de evidencia, análisis forense, cadena de custodia, reportes técnicos</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🤝</div>
+                        <h3 class="editable" data-edit="text">Otros Roles Clave</h3>
+                        <div class="team-structure">
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Recursos Humanos</strong>
+                                <p class="editable" data-edit="text">Apoyo a empleados afectados, comunicación interna, gestión de crisis de personal</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Finanzas</strong>
+                                <p class="editable" data-edit="text">Gestión de costos del incidente, activación de seguros, evaluación de impacto financiero</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Atención al Cliente</strong>
+                                <p class="editable" data-edit="text">Soporte a usuarios afectados, gestión de consultas, comunicación de impacto</p>
+                            </div>
+                            <div class="role-item">
+                                <strong class="editable" data-edit="text">Compliance</strong>
+                                <p class="editable" data-edit="text">Cumplimiento regulatorio, reportes a CMF, validación de procedimientos</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="governanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Priorización y Clasificación -->
+        <div class="slide" data-slide="7">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">6. Priorización y Clasificación de Incidentes</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card severity-critical">
+                        <div class="card-icon">🔴</div>
+                        <h3 class="editable" data-edit="text">Severity 1 (Crítico)</h3>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Impacto:</strong> Pérdida masiva de datos, interrupción total de servicios críticos, daño reputacional severo</li>
+                            <li class="editable" data-edit="text"><strong>Ejemplos:</strong> Ransomware a bases de datos, compromiso de IAM cloud, exfiltración masiva de datos</li>
+                            <li class="editable" data-edit="text"><strong>MTTR:</strong> &lt; 2 horas</li>
+                            <li class="editable" data-edit="text"><strong>Acciones:</strong> Activación inmediata de Comité de Crisis, notificación a CMF dentro de 24h</li>
+                            <li class="editable" data-edit="text"><strong>Recursos:</strong> CSIRT completo, expertos externos si es necesario</li>
+                        </ul>
+                    </div>
+                    <div class="content-card glass-card severity-high">
+                        <div class="card-icon">🟠</div>
+                        <h3 class="editable" data-edit="text">Severity 2 (Alto)</h3>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Impacto:</strong> Pérdida de datos sensibles, interrupción parcial de servicios, impacto financiero significativo</li>
+                            <li class="editable" data-edit="text"><strong>Ejemplos:</strong> DDoS que degrada rendimiento, exfiltración de datos no críticos, compromiso de sistemas secundarios</li>
+                            <li class="editable" data-edit="text"><strong>MTTR:</strong> &lt; 4 horas</li>
+                            <li class="editable" data-edit="text"><strong>Acciones:</strong> CSIRT activado, monitoreo intensivo, comunicación interna</li>
+                        </ul>
+                    </div>
+                    <div class="content-card glass-card severity-medium">
+                        <div class="card-icon">🟡</div>
+                        <h3 class="editable" data-edit="text">Severity 3 (Medio)</h3>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Impacto:</strong> Acceso no autorizado a sistemas no críticos, vulnerabilidades detectadas, impacto menor</li>
+                            <li class="editable" data-edit="text"><strong>Ejemplos:</strong> Escaneo de puertos, intentos de phishing bloqueados, configuración errónea</li>
+                            <li class="editable" data-edit="text"><strong>MTTR:</strong> &lt; 8 horas</li>
+                            <li class="editable" data-edit="text"><strong>Acciones:</strong> Análisis estándar, remediación planificada</li>
+                        </ul>
+                    </div>
+                    <div class="content-card glass-card severity-low">
+                        <div class="card-icon">🟢</div>
+                        <h3 class="editable" data-edit="text">Severity 4 (Bajo)</h3>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Impacto:</strong> Eventos de seguridad menores, alertas informativas, sin impacto operativo</li>
+                            <li class="editable" data-edit="text"><strong>Ejemplos:</strong> Falsos positivos, actividad sospechosa sin confirmación</li>
+                            <li class="editable" data-edit="text"><strong>MTTR:</strong> &lt; 24 horas</li>
+                            <li class="editable" data-edit="text"><strong>Acciones:</strong> Registro y seguimiento rutinario</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="chart-container-medium" style="margin-top: 30px;">
+                    <canvas id="severityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Comunicación y Stakeholders -->
+        <div class="slide" data-slide="8">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">7. Estrategia de Comunicación y Stakeholders</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📢</div>
+                        <h3 class="editable" data-edit="text">Comunicación Interna</h3>
+                        <div class="comm-details">
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Frecuencia:</strong>
+                                <p class="editable" data-edit="text">Actualizaciones cada 2 horas durante crisis activa</p>
+                            </div>
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Canales:</strong>
+                                <p class="editable" data-edit="text">Email corporativo + Slack #incident-response + Portal interno</p>
+                            </div>
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Audiencia:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Empleados: Información general, medidas de protección personal</li>
+                                    <li class="editable" data-edit="text">Gerencia: Detalles operacionales, impacto en procesos</li>
+                                    <li class="editable" data-edit="text">Directorio: Resumen ejecutivo, decisiones estratégicas</li>
+                                </ul>
+                            </div>
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Tono:</strong>
+                                <p class="editable" data-edit="text">Transparente, factual, sin alarmismo, enfocado en soluciones</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🌐</div>
+                        <h3 class="editable" data-edit="text">Comunicación Externa</h3>
+                        <div class="comm-details">
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Clientes:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Canal: Email + Portal web + SMS para críticos</li>
+                                    <li class="editable" data-edit="text">Timing: Dentro de 4 horas desde decisión</li>
+                                    <li class="editable" data-edit="text">Mensaje: Transparente sobre impacto y medidas de protección</li>
+                                </ul>
+                            </div>
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Reguladores (CMF, CSIRT Nacional):</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Formato: Formal, según plantilla regulatoria</li>
+                                    <li class="editable" data-edit="text">Timing: Dentro de 24 horas (obligatorio para Severity 1-2)</li>
+                                    <li class="editable" data-edit="text">Contenido: Alcance, impacto, medidas correctivas, timeline</li>
+                                </ul>
+                            </div>
+                            <div class="comm-item">
+                                <strong class="editable" data-edit="text">Medios:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Canal: Comunicado oficial en sitio web y redes sociales</li>
+                                    <li class="editable" data-edit="text">Aprobación: Requiere aprobación del Comité de Crisis</li>
+                                    <li class="editable" data-edit="text">Spokesperson: Gerente de Comunicaciones designado</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">👥</div>
+                        <h3 class="editable" data-edit="text">Stakeholders Clave</h3>
+                        <div class="stakeholder-list">
+                            <div class="stakeholder-item">
+                                <strong class="editable" data-edit="text">Internos:</strong>
+                                <p class="editable" data-edit="text">CEO, Directorio, CSIRT, Legal, Comunicaciones, Operaciones, RR.HH., Finanzas</p>
+                            </div>
+                            <div class="stakeholder-item">
+                                <strong class="editable" data-edit="text">Externos:</strong>
+                                <p class="editable" data-edit="text">Clientes, CMF, CSIRT Nacional, Bancos/Partners, AWS/Google Cloud, Medios, Fuerzas del Orden</p>
+                            </div>
+                            <div class="stakeholder-item">
+                                <strong class="editable" data-edit="text">Priorización:</strong>
+                                <p class="editable" data-edit="text">1) Reguladores, 2) Clientes afectados, 3) Partners críticos, 4) Medios</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="stakeholderChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Gestión de Crisis -->
+        <div class="slide" data-slide="9">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">8. Gestión de Crisis (Cibercrisis)</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card crisis">
+                        <div class="card-icon">🚨</div>
+                        <h3 class="editable" data-edit="text">Activación del Comité de Cibercrisis</h3>
+                        <div class="crisis-confirmation">
+                            <div class="confirmation-item">
+                                <strong class="editable" data-edit="text">Criterios de Activación:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Severidad Crítica (Severity 1) confirmada</li>
+                                    <li class="editable" data-edit="text">Impacto en múltiples sistemas críticos simultáneamente</li>
+                                    <li class="editable" data-edit="text">Exposición masiva de datos sensibles (&gt;10,000 registros)</li>
+                                    <li class="editable" data-edit="text">Requisito regulatorio de notificación inmediata</li>
+                                    <li class="editable" data-edit="text">Impacto financiero significativo (&gt;5M CLP estimado)</li>
+                                    <li class="editable" data-edit="text">Interrupción de servicios críticos &gt;4 horas</li>
+                                </ul>
+                            </div>
+                            <div class="confirmation-item">
+                                <strong class="editable" data-edit="text">Proceso de Activación:</strong>
+                                <ol>
+                                    <li class="editable" data-edit="text">CISO evalúa situación y recomienda activación</li>
+                                    <li class="editable" data-edit="text">CEO aprueba activación del Comité (o delegado autorizado)</li>
+                                    <li class="editable" data-edit="text">Notificación inmediata a todos los miembros del Comité (máx. 15 min)</li>
+                                    <li class="editable" data-edit="text">Primera reunión virtual/presencial dentro de 30 minutos</li>
+                                    <li class="editable" data-edit="text">Establecimiento de cadencia de reuniones (cada 2-4 horas)</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📅</div>
+                        <h3 class="editable" data-edit="text">Agenda Típica del Comité</h3>
+                        <div class="agenda-items">
+                            <div class="agenda-item">
+                                <strong class="editable" data-edit="text">1. Resumen del Incidente (10 min)</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Estado actual según CSIRT</li>
+                                    <li class="editable" data-edit="text">Alcance confirmado y estimado</li>
+                                    <li class="editable" data-edit="text">Impacto operacional, financiero y reputacional</li>
+                                </ul>
+                            </div>
+                            <div class="agenda-item">
+                                <strong class="editable" data-edit="text">2. Evaluación de Riesgos (15 min)</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Riesgos inmediatos y a corto plazo</li>
+                                    <li class="editable" data-edit="text">Opciones de respuesta y sus implicaciones</li>
+                                    <li class="editable" data-edit="text">Recursos necesarios y disponibilidad</li>
+                                </ul>
+                            </div>
+                            <div class="agenda-item">
+                                <strong class="editable" data-edit="text">3. Decisiones Estratégicas (20 min)</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Estrategia de contención y recuperación</li>
+                                    <li class="editable" data-edit="text">Asignación de recursos y presupuesto</li>
+                                    <li class="editable" data-edit="text">Escalamiento a expertos externos si es necesario</li>
+                                </ul>
+                            </div>
+                            <div class="agenda-item">
+                                <strong class="editable" data-edit="text">4. Comunicación (10 min)</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Aprobación de mensajes internos y externos</li>
+                                    <li class="editable" data-edit="text">Timing y canales de comunicación</li>
+                                    <li class="editable" data-edit="text">Spokesperson designado</li>
+                                </ul>
+                            </div>
+                            <div class="agenda-item">
+                                <strong class="editable" data-edit="text">5. Próximos Pasos (5 min)</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Asignación de tareas y responsables</li>
+                                    <li class="editable" data-edit="text">Siguiente reunión programada</li>
+                                    <li class="editable" data-edit="text">Criterios de desactivación del Comité</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Recuperación y Continuidad -->
+        <div class="slide" data-slide="10">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">9. Recuperación y Continuidad (DR/BC)</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card">
+                        <div class="card-icon">🔄</div>
+                        <h3 class="editable" data-edit="text">Plan de Recuperación ante Desastres (DRP)</h3>
+                        <div class="recovery-strategy">
+                            <div class="strategy-phase">
+                                <strong class="editable" data-edit="text">Objetivos de Recuperación:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text"><strong>RTO (Recovery Time Objective):</strong> 4 horas para servicios críticos</li>
+                                    <li class="editable" data-edit="text"><strong>RPO (Recovery Point Objective):</strong> 1 hora máximo de pérdida de datos</li>
+                                    <li class="editable" data-edit="text"><strong>Prioridad:</strong> Sitio Pagadores → APIs de transacciones → Portal de clientes</li>
+                                </ul>
+                            </div>
+                            <div class="strategy-phase">
+                                <strong class="editable" data-edit="text">Estrategia de Backups:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Frecuencia: Incrementales cada hora, completos diarios</li>
+                                    <li class="editable" data-edit="text">Ubicación: S3 con versionado, réplica en región diferente</li>
+                                    <li class="editable" data-edit="text">Cifrado: AES-256 en reposo y en tránsito</li>
+                                    <li class="editable" data-edit="text">Validación: Pruebas de restauración mensuales</li>
+                                    <li class="editable" data-edit="text">Retención: 30 días incrementales, 90 días completos</li>
+                                </ul>
+                            </div>
+                            <div class="strategy-phase">
+                                <strong class="editable" data-edit="text">Proceso de Restauración:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">1. Validar integridad del backup (hashes, pruebas)</li>
+                                    <li class="editable" data-edit="text">2. Aislar ambiente de restauración</li>
+                                    <li class="editable" data-edit="text">3. Restaurar desde último backup validado</li>
+                                    <li class="editable" data-edit="text">4. Validar funcionalidad de servicios críticos</li>
+                                    <li class="editable" data-edit="text">5. Monitoreo intensivo post-restauración (24-48 horas)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📈</div>
+                        <h3 class="editable" data-edit="text">Plan de Continuidad del Negocio (BCP)</h3>
+                        <div class="recovery-strategy">
+                            <div class="strategy-phase">
+                                <strong class="editable" data-edit="text">Procesos Críticos Identificados:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Procesamiento de pagos y transacciones</li>
+                                    <li class="editable" data-edit="text">Gestión de préstamos y cobranzas</li>
+                                    <li class="editable" data-edit="text">Comunicación con clientes</li>
+                                    <li class="editable" data-edit="text">Reportes regulatorios</li>
+                                </ul>
+                            </div>
+                            <div class="strategy-phase">
+                                <strong class="editable" data-edit="text">Recursos Alternativos:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Personal: Equipos de respaldo, capacitación cruzada</li>
+                                    <li class="editable" data-edit="text">Tecnología: Infraestructura cloud redundante, failover automático</li>
+                                    <li class="editable" data-edit="text">Proveedores: Múltiples proveedores críticos, SLAs garantizados</li>
+                                </ul>
+                            </div>
+                            <div class="strategy-phase">
+                                <strong class="editable" data-edit="text">Criterios de Retorno a Normalidad:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Servicios críticos restaurados y validados</li>
+                                    <li class="editable" data-edit="text">Monitoreo estable sin anomalías por 24 horas</li>
+                                    <li class="editable" data-edit="text">Evidencia preservada y análisis forense iniciado</li>
+                                    <li class="editable" data-edit="text">Comunicación con stakeholders completada</li>
+                                    <li class="editable" data-edit="text">Aprobación del Comité de Crisis para desactivación</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="recoveryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Métricas y KPIs -->
+        <div class="slide" data-slide="11">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">10. Métricas, KPIs y SLAs</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="editable" data-edit="text">KPIs Principales</h3>
+                        <div class="kpi-list">
+                            <div class="kpi-item">
+                                <strong class="editable" data-edit="text">MTTD (Mean Time To Detect)</strong>
+                                <p class="editable" data-edit="text">Tiempo promedio desde que ocurre el incidente hasta su detección</p>
+                                <span class="kpi-target editable" data-edit="text">Objetivo: &lt; 1 hora</span>
+                            </div>
+                            <div class="kpi-item">
+                                <strong class="editable" data-edit="text">MTTR (Mean Time To Respond)</strong>
+                                <p class="editable" data-edit="text">Tiempo promedio desde detección hasta inicio de respuesta</p>
+                                <span class="kpi-target editable" data-edit="text">Objetivo: &lt; 30 minutos</span>
+                            </div>
+                            <div class="kpi-item">
+                                <strong class="editable" data-edit="text">MTTC (Mean Time To Contain)</strong>
+                                <p class="editable" data-edit="text">Tiempo promedio desde inicio de respuesta hasta contención</p>
+                                <span class="kpi-target editable" data-edit="text">Objetivo: &lt; 2 horas (Severity 1)</span>
+                            </div>
+                            <div class="kpi-item">
+                                <strong class="editable" data-edit="text">MTTR (Mean Time To Recover)</strong>
+                                <p class="editable" data-edit="text">Tiempo promedio desde contención hasta recuperación completa</p>
+                                <span class="kpi-target editable" data-edit="text">Objetivo: &lt; 4 horas (servicios críticos)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">⏱️</div>
+                        <h3 class="editable" data-edit="text">SLAs Críticos</h3>
+                        <div class="sla-list">
+                            <div class="sla-item">
+                                <div class="sla-header">
+                                    <strong class="editable" data-edit="text">Detección de Incidente</strong>
+                                    <span class="sla-time editable" data-edit="text">&lt; 1 hora</span>
+                                </div>
+                                <p class="editable" data-edit="text">Desde ocurrencia hasta detección por SIEM o monitoreo</p>
+                            </div>
+                            <div class="sla-item">
+                                <div class="sla-header">
+                                    <strong class="editable" data-edit="text">Contención Crítica</strong>
+                                    <span class="sla-time editable" data-edit="text">&lt; 2 horas</span>
+                                </div>
+                                <p class="editable" data-edit="text">Para incidentes Severity 1, desde detección hasta contención</p>
+                            </div>
+                            <div class="sla-item">
+                                <div class="sla-header">
+                                    <strong class="editable" data-edit="text">Notificación Interna</strong>
+                                    <span class="sla-time editable" data-edit="text">&lt; 1 hora</span>
+                                </div>
+                                <p class="editable" data-edit="text">Comunicación a stakeholders internos clave</p>
+                            </div>
+                            <div class="sla-item">
+                                <div class="sla-header">
+                                    <strong class="editable" data-edit="text">Recuperación de Servicios</strong>
+                                    <span class="sla-time editable" data-edit="text">&lt; 4 horas</span>
+                                </div>
+                                <p class="editable" data-edit="text">Restauración de servicios críticos operativos</p>
+                            </div>
+                            <div class="sla-item">
+                                <div class="sla-header">
+                                    <strong class="editable" data-edit="text">Reporte Regulador</strong>
+                                    <span class="sla-time editable" data-edit="text">&lt; 24 horas</span>
+                                </div>
+                                <p class="editable" data-edit="text">Notificación formal a CMF para incidentes críticos</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-small">
+                            <canvas id="metricsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: After Action Review -->
+        <div class="slide" data-slide="12">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">11. After Action Review (AAR)</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📝</div>
+                        <h3 class="editable" data-edit="text">Proceso AAR</h3>
+                        <div class="aar-questions">
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">Cuándo Realizar:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Después de cada incidente Severity 1 o 2</li>
+                                    <li class="editable" data-edit="text">Dentro de 2-5 días después de la resolución</li>
+                                    <li class="editable" data-edit="text">Cuando la memoria del evento aún está fresca</li>
+                                </ul>
+                            </div>
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">Participantes:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Equipo completo de IR/CSIRT</li>
+                                    <li class="editable" data-edit="text">Miembros del Comité de Crisis</li>
+                                    <li class="editable" data-edit="text">Stakeholders relevantes (Legal, Comms, Operaciones)</li>
+                                    <li class="editable" data-edit="text">Facilitador neutral (preferiblemente externo)</li>
+                                </ul>
+                            </div>
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">Duración:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">2-4 horas para incidentes complejos</li>
+                                    <li class="editable" data-edit="text">Estructurado pero abierto a discusión</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">💡</div>
+                        <h3 class="editable" data-edit="text">Preguntas Clave del AAR</h3>
+                        <div class="aar-questions">
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">¿Qué funcionó bien?</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Procesos que se ejecutaron según lo esperado</li>
+                                    <li class="editable" data-edit="text">Herramientas y tecnologías efectivas</li>
+                                    <li class="editable" data-edit="text">Comunicación y coordinación exitosas</li>
+                                </ul>
+                            </div>
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">¿Qué no funcionó?</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Procesos que fallaron o fueron inadecuados</li>
+                                    <li class="editable" data-edit="text">Herramientas que no cumplieron expectativas</li>
+                                    <li class="editable" data-edit="text">Barreras y obstáculos encontrados</li>
+                                </ul>
+                            </div>
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">¿Por qué?</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Análisis de causa raíz de problemas</li>
+                                    <li class="editable" data-edit="text">Factores contribuyentes (técnicos, humanos, organizacionales)</li>
+                                </ul>
+                            </div>
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">¿Qué mejoraríamos?</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Acciones concretas y medibles</li>
+                                    <li class="editable" data-edit="text">Priorización de mejoras</li>
+                                    <li class="editable" data-edit="text">Asignación de responsables y plazos</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card highlight-full">
+                        <div class="card-icon">📋</div>
+                        <h3 class="editable" data-edit="text">Salidas del AAR</h3>
+                        <div class="aar-questions">
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">Informe de Lecciones Aprendidas:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Resumen ejecutivo del incidente</li>
+                                    <li class="editable" data-edit="text">Hallazgos clave y recomendaciones</li>
+                                    <li class="editable" data-edit="text">Métricas y tiempos reales vs objetivos</li>
+                                </ul>
+                            </div>
+                            <div class="question-item">
+                                <strong class="editable" data-edit="text">Plan de Acción:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Quick wins (implementar en 1-2 semanas)</li>
+                                    <li class="editable" data-edit="text">Mejoras estructurales (1-6 meses)</li>
+                                    <li class="editable" data-edit="text">Actualización de playbooks y procedimientos</li>
+                                    <li class="editable" data-edit="text">Capacitación adicional identificada</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Mejoras Continuas -->
+        <div class="slide" data-slide="13">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">12. Mejoras Continuas y Backlog</h1>
+                <div class="content-grid">
+                    <div class="content-card glass-card quick-wins">
+                        <div class="card-icon">🚀</div>
+                        <h3 class="editable" data-edit="text">Quick Wins (1-2 semanas)</h3>
+                        <div class="backlog-items">
+                            <div class="backlog-item">
+                                <strong class="editable" data-edit="text">Seguridad:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Implementar 2FA obligatorio en todas las cuentas privilegiadas</li>
+                                    <li class="editable" data-edit="text">Actualizar firmas de EDR/Antivirus y reglas de SIEM</li>
+                                    <li class="editable" data-edit="text">Reforzar políticas de contraseñas (complejidad, rotación)</li>
+                                    <li class="editable" data-edit="text">Realizar simulacros de phishing mensuales</li>
+                                </ul>
+                            </div>
+                            <div class="backlog-item">
+                                <strong class="editable" data-edit="text">Procesos:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Documentar y estandarizar procedimientos de triage</li>
+                                    <li class="editable" data-edit="text">Crear plantillas de comunicación pre-aprobadas</li>
+                                    <li class="editable" data-edit="text">Establecer runbooks para escenarios comunes</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card structural">
+                        <div class="card-icon">🏗️</div>
+                        <h3 class="editable" data-edit="text">Cambios Estructurales (1-6 meses)</h3>
+                        <div class="backlog-items">
+                            <div class="backlog-item">
+                                <strong class="editable" data-edit="text">Tecnología:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Implementar SOAR para automatización de respuesta</li>
+                                    <li class="editable" data-edit="text">Contratar equipo de Red Team para pruebas de penetración trimestrales</li>
+                                    <li class="editable" data-edit="text">Desarrollar programa de Bug Bounty</li>
+                                    <li class="editable" data-edit="text">Migrar a arquitectura Zero Trust</li>
+                                    <li class="editable" data-edit="text">Establecer SOC 24/7 o servicio gestionado</li>
+                                </ul>
+                            </div>
+                            <div class="backlog-item">
+                                <strong class="editable" data-edit="text">Organización:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Expandir equipo CSIRT con roles especializados</li>
+                                    <li class="editable" data-edit="text">Capacitación certificada para equipo (GCIH, GCFA, etc.)</li>
+                                    <li class="editable" data-edit="text">Establecer relaciones con expertos forenses externos</li>
+                                    <li class="editable" data-edit="text">Implementar programa de awareness continuo</li>
+                                </ul>
+                            </div>
+                            <div class="backlog-item">
+                                <strong class="editable" data-edit="text">Cumplimiento:</strong>
+                                <ul>
+                                    <li class="editable" data-edit="text">Certificación ISO 27001</li>
+                                    <li class="editable" data-edit="text">Alineación completa con NIST Cybersecurity Framework</li>
+                                    <li class="editable" data-edit="text">Auditorías de seguridad externas anuales</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card glass-card">
+                        <div class="card-icon">📊</div>
+                        <h3 class="editable" data-edit="text">Seguimiento y Métricas</h3>
+                        <ul>
+                            <li class="editable" data-edit="text"><strong>Revisión Mensual:</strong> Progreso de mejoras, actualización de backlog</li>
+                            <li class="editable" data-edit="text"><strong>Revisión Trimestral:</strong> Evaluación de efectividad, ajuste de prioridades</li>
+                            <li class="editable" data-edit="text"><strong>Revisión Anual:</strong> Actualización completa del plan, validación de objetivos</li>
+                            <li class="editable" data-edit="text"><strong>Métricas:</strong> Tiempo de respuesta, tasa de detección, efectividad de contención</li>
+                        </ul>
+                        <div class="chart-container-small">
+                            <canvas id="improvementsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Cierre -->
+        <div class="slide" data-slide="14">
+            <div class="slide-content">
+                <h1 class="slide-title editable" data-edit="text">¡Gracias!</h1>
+                <p class="thank-you-message editable" data-edit="text">Esperamos que esta presentación haya sido de su agrado y utilidad.</p>
+                <div class="contact-info">
+                    <p class="editable" data-edit="text"><strong>Contacto:</strong></p>
+                    <p class="editable" data-edit="text">Eduardo Lucero | José Antonio Montero | Rodrigo Flores | Gerson Cornejo</p>
+                </div>
+                <div class="uai-logo-footer">UAI</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thumbnail Navigation -->
+    <div id="thumbnailNav" class="thumbnail-navigation">
+        <button id="closeThumbnails" class="close-thumbnails">×</button>
+        <div class="thumbnail-grid" id="thumbnailGrid"></div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="search-modal">
+        <div class="search-content">
+            <input type="text" id="searchInput" placeholder="Buscar en la presentación..." autocomplete="off">
+            <div id="searchResults" class="search-results"></div>
+            <button id="closeSearch" class="close-search">×</button>
+        </div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="theme-toggle" title="Cambiar tema">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+    </button>
+
+    <!-- Additional Controls -->
+    <div class="additional-controls">
+        <button id="thumbnailBtn" class="control-btn" title="Ver miniaturas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+            </svg>
+        </button>
+        <button id="searchBtn" class="control-btn" title="Buscar (Ctrl+F)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="M21 21l-4.35-4.35"/>
+            </svg>
+        </button>
+        <button id="exportPdfBtn" class="control-btn" title="Exportar a PDF">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Q&A Menu -->
+    <div id="qaMenu" class="qa-menu">
+        <button id="qaToggle" class="qa-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <path d="M12 17h.01"/>
+            </svg>
+            <span>Q&A</span>
+        </button>
+        <div class="qa-panel">
+            <div class="qa-header">
+                <h2>Preguntas Frecuentes del Profesor</h2>
+                <button id="closeQA" class="close-qa">×</button>
+            </div>
+            <div class="qa-content" id="qaContent"></div>
+        </div>
+    </div>
+
+    <!-- Anexos Menu -->
+    <div id="anexosMenu" class="anexos-menu">
+        <button id="anexosToggle" class="anexos-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <span>Anexos</span>
+        </button>
+        <div class="anexos-panel">
+            <div class="anexos-header">
+                <h2>Información Adicional del Informe</h2>
+                <button id="closeAnexos" class="close-anexos">×</button>
+            </div>
+            <div class="anexos-content" id="anexosContent"></div>
+        </div>
+    </div>
+
+    <script src="performance.js"></script>
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="edit-mode.js"></script>
+    <script src="charts.js"></script>
+    <script src="features.js"></script>
+    <script src="qa-anexos.js"></script>
+    <script src="presenter-mode.js"></script>
+    <script src="listener-mode.js"></script>
+    <script src="playbook-simulation.js"></script>
+</body>
+</html>
