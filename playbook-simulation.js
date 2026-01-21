@@ -1,210 +1,295 @@
-// Simulación Interactiva de Playbooks
+// Simulación Interactiva de Playbooks - Versión Mejorada
+// Esta simulación permite practicar el proceso de respuesta a incidentes paso a paso
 
 let playbookState = {
     currentStep: 0,
     completedSteps: [],
     startTime: null,
-    stepTimes: {}
+    stepTimers: {},
+    isActive: false
 };
 
+// Inicializar simulación cuando la slide 4 esté visible
 function initializePlaybookSimulation() {
-    const playbookSteps = document.querySelectorAll('.interactive-step');
+    const slide4 = document.querySelector('.slide[data-slide="4"]');
+    if (!slide4) {
+        console.warn('Slide 4 no encontrada');
+        return;
+    }
     
+    // Solo inicializar si estamos en la slide 4
+    if (!slide4.classList.contains('active')) {
+        return;
+    }
+    
+    const playbookSteps = slide4.querySelectorAll('.interactive-step');
+    if (playbookSteps.length === 0) {
+        console.warn('No se encontraron pasos del playbook');
+        return;
+    }
+    
+    // Limpiar inicializaciones previas
+    resetPlaybookState();
+    
+    // Configurar cada paso
     playbookSteps.forEach((step, index) => {
-        const stepHeader = step.querySelector('.step-header');
-        const stepContent = step.querySelector('.step-content');
-        const stepToggle = step.querySelector('.step-toggle');
-        
-        if (!stepHeader || !stepContent) return;
-        
-        // Add step validation
-        const stepNum = parseInt(step.dataset.step);
-        step.dataset.stepIndex = index;
-        
-        // Add completion checkbox
-        const completionCheck = document.createElement('div');
-        completionCheck.className = 'step-completion';
-        completionCheck.innerHTML = `
-            <label class="step-checkbox-label">
-                <input type="checkbox" class="step-checkbox" data-step="${stepNum}">
-                <span>Paso completado</span>
-            </label>
-        `;
-        stepContent.appendChild(completionCheck);
-        
-        // Add timer for step
-        const stepTimer = document.createElement('div');
-        stepTimer.className = 'step-timer';
-        stepTimer.innerHTML = `<span class="timer-label">Tiempo:</span> <span class="timer-value" data-step="${stepNum}">00:00</span>`;
-        stepHeader.appendChild(stepTimer);
-        
-        // Toggle step content
-        if (stepToggle) {
-            stepToggle.addEventListener('click', () => {
-                step.classList.toggle('expanded');
-                const isExpanded = step.classList.contains('expanded');
-                stepToggle.textContent = isExpanded ? '▲' : '▼';
-                
-                if (isExpanded && !playbookState.stepTimes[stepNum]) {
-                    startStepTimer(stepNum);
-                }
-            });
-        }
-        
-        // Checkbox handler
-        const checkbox = completionCheck.querySelector('.step-checkbox');
-        checkbox.addEventListener('change', (e) => {
-            const isChecked = e.target.checked;
-            if (isChecked) {
-                markStepComplete(stepNum);
-                stopStepTimer(stepNum);
-            } else {
-                markStepIncomplete(stepNum);
-            }
-            updatePlaybookProgress();
-        });
-        
-        // Add "What NOT to do" section
-        addWhatNotToDo(stepContent, stepNum);
+        setupStep(step, index + 1);
     });
     
-    // Add playbook controls
-    addPlaybookControls();
+    // Agregar controles de simulación
+    addPlaybookControls(slide4);
     
-    // Initialize progress
+    // Actualizar progreso inicial
+    updatePlaybookProgress();
+    
+    console.log('Simulación del playbook inicializada');
+}
+
+// Configurar un paso individual
+function setupStep(stepElement, stepNumber) {
+    const stepHeader = stepElement.querySelector('.step-header');
+    const stepContent = stepElement.querySelector('.step-content');
+    const stepToggle = stepElement.querySelector('.step-toggle');
+    
+    if (!stepHeader || !stepContent) {
+        console.warn(`Paso ${stepNumber} no tiene estructura correcta`);
+        return;
+    }
+    
+    // Limpiar contenido previo
+    const existingCheckbox = stepContent.querySelector('.step-completion');
+    if (existingCheckbox) {
+        existingCheckbox.remove();
+    }
+    
+    // Agregar checkbox de completado
+    const completionCheck = document.createElement('div');
+    completionCheck.className = 'step-completion';
+    completionCheck.innerHTML = `
+        <label class="step-checkbox-label">
+            <input type="checkbox" class="step-checkbox" data-step="${stepNumber}">
+            <span>Marcar como completado</span>
+        </label>
+    `;
+    stepContent.appendChild(completionCheck);
+    
+    // Event listener para el checkbox
+    const checkbox = completionCheck.querySelector('.step-checkbox');
+    checkbox.addEventListener('change', (e) => {
+        handleStepCompletion(stepNumber, e.target.checked);
+    });
+    
+    // Event listener para expandir/colapsar
+    if (stepToggle) {
+        stepToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleStep(stepElement, stepNumber);
+        });
+    }
+    
+    // Click en el header también expande/colapsa
+    stepHeader.addEventListener('click', (e) => {
+        if (e.target !== stepToggle && !e.target.closest('.step-toggle')) {
+            toggleStep(stepElement, stepNumber);
+        }
+    });
+    
+    // Inicializar estado
+    stepElement.classList.remove('expanded', 'completed');
+    stepContent.style.display = 'none';
+}
+
+// Alternar expansión de un paso
+function toggleStep(stepElement, stepNumber) {
+    const stepContent = stepElement.querySelector('.step-content');
+    const stepToggle = stepElement.querySelector('.step-toggle');
+    const isExpanded = stepElement.classList.contains('expanded');
+    
+    if (isExpanded) {
+        // Colapsar
+        stepElement.classList.remove('expanded');
+        stepContent.style.display = 'none';
+        if (stepToggle) stepToggle.textContent = '▼';
+    } else {
+        // Expandir
+        stepElement.classList.add('expanded');
+        stepContent.style.display = 'block';
+        if (stepToggle) stepToggle.textContent = '▲';
+        
+        // Iniciar timer si no está activo
+        if (!playbookState.stepTimers[stepNumber]) {
+            startStepTimer(stepNumber);
+        }
+    }
+    
+    // Optimizar scroll suave
+    requestAnimationFrame(() => {
+        stepElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+}
+
+// Manejar completado de paso
+function handleStepCompletion(stepNumber, isCompleted) {
+    const stepElement = document.querySelector(`.interactive-step[data-step="${stepNumber}"]`);
+    
+    if (isCompleted) {
+        if (!playbookState.completedSteps.includes(stepNumber)) {
+            playbookState.completedSteps.push(stepNumber);
+        }
+        if (stepElement) {
+            stepElement.classList.add('completed');
+        }
+        stopStepTimer(stepNumber);
+    } else {
+        playbookState.completedSteps = playbookState.completedSteps.filter(s => s !== stepNumber);
+        if (stepElement) {
+            stepElement.classList.remove('completed');
+        }
+    }
+    
     updatePlaybookProgress();
 }
 
-function addWhatNotToDo(stepContent, stepNum) {
-    const whatNotToDo = document.createElement('div');
-    whatNotToDo.className = 'what-not-to-do';
-    whatNotToDo.innerHTML = `
-        <h5>⚠️ Qué NO hacer:</h5>
-        <ul class="not-to-do-list">
-            ${getWhatNotToDoContent(stepNum)}
-        </ul>
-    `;
-    stepContent.appendChild(whatNotToDo);
-}
-
-function getWhatNotToDoContent(stepNum) {
-    const notToDoMap = {
-        1: '<li>No ignorar alertas sin investigar</li><li>No asumir que es un falso positivo sin validar</li>',
-        2: '<li>No escalar sin confirmar el incidente</li><li>No compartir información sin autorización</li>',
-        3: '<li>No desconectar sistemas sin preservar evidencia</li><li>No bloquear IPs sin documentar</li>',
-        4: '<li>No eliminar evidencia durante la erradicación</li><li>No restaurar sin validar integridad</li>',
-        5: '<li>No restaurar desde backups no validados</li><li>No activar servicios sin monitoreo</li>',
-        6: '<li>No cerrar el incidente sin AAR</li><li>No olvidar actualizar playbooks</li>'
+// Iniciar timer de paso
+function startStepTimer(stepNumber) {
+    if (playbookState.stepTimers[stepNumber]) {
+        return; // Ya está activo
+    }
+    
+    playbookState.stepTimers[stepNumber] = {
+        start: Date.now(),
+        interval: null
     };
-    return notToDoMap[stepNum] || '<li>No omitir pasos del playbook</li>';
+    
+    const timerElement = document.querySelector(`.timer-value[data-step="${stepNumber}"]`);
+    if (!timerElement) {
+        // Crear elemento de timer si no existe
+        const stepHeader = document.querySelector(`.interactive-step[data-step="${stepNumber}"] .step-header`);
+        if (stepHeader) {
+            const timerContainer = document.createElement('div');
+            timerContainer.className = 'step-timer';
+            timerContainer.innerHTML = `
+                <span class="timer-label">Tiempo:</span>
+                <span class="timer-value" data-step="${stepNumber}">00:00</span>
+            `;
+            stepHeader.appendChild(timerContainer);
+        }
+    }
+    
+    // Actualizar timer cada segundo
+    playbookState.stepTimers[stepNumber].interval = setInterval(() => {
+        updateStepTimer(stepNumber);
+    }, 1000);
 }
 
-function addPlaybookControls() {
-    const playbookContainer = document.querySelector('.playbook-container');
+// Detener timer de paso
+function stopStepTimer(stepNumber) {
+    if (playbookState.stepTimers[stepNumber]) {
+        if (playbookState.stepTimers[stepNumber].interval) {
+            clearInterval(playbookState.stepTimers[stepNumber].interval);
+        }
+        // Mantener el tiempo transcurrido
+        const elapsed = Date.now() - playbookState.stepTimers[stepNumber].start;
+        playbookState.stepTimers[stepNumber].elapsed = elapsed;
+    }
+}
+
+// Actualizar display del timer
+function updateStepTimer(stepNumber) {
+    const timerValue = document.querySelector(`.timer-value[data-step="${stepNumber}"]`);
+    if (!timerValue) return;
+    
+    const timer = playbookState.stepTimers[stepNumber];
+    if (!timer) return;
+    
+    const elapsed = timer.elapsed || (Date.now() - timer.start);
+    const minutes = Math.floor(elapsed / 60000);
+    const seconds = Math.floor((elapsed % 60000) / 1000);
+    
+    timerValue.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+// Agregar controles de simulación
+function addPlaybookControls(slideElement) {
+    const playbookContainer = slideElement.querySelector('.playbook-container');
     if (!playbookContainer) return;
+    
+    // Remover controles existentes
+    const existingControls = playbookContainer.querySelector('.playbook-controls');
+    if (existingControls) {
+        existingControls.remove();
+    }
     
     const controls = document.createElement('div');
     controls.className = 'playbook-controls';
     controls.innerHTML = `
-        <div class="playbook-progress-bar">
-            <div class="playbook-progress-fill" id="playbookProgressFill"></div>
+        <div class="playbook-instructions">
+            <h4>📖 Instrucciones</h4>
+            <p>Esta simulación te permite practicar el proceso de respuesta a incidentes:</p>
+            <ul>
+                <li><strong>Haz clic en cada paso</strong> para ver los detalles y actividades</li>
+                <li><strong>Marca como completado</strong> cuando termines de revisar cada paso</li>
+                <li><strong>El temporizador</strong> registra cuánto tiempo pasas en cada paso</li>
+                <li><strong>Completa todos los pasos</strong> para finalizar la simulación</li>
+            </ul>
         </div>
-        <div class="playbook-stats">
-            <div class="stat-item">
-                <span class="stat-label">Progreso:</span>
-                <span class="stat-value" id="playbookProgress">0%</span>
+        <div class="playbook-progress-section">
+            <div class="playbook-progress-bar">
+                <div class="playbook-progress-fill" id="playbookProgressFill"></div>
             </div>
-            <div class="stat-item">
-                <span class="stat-label">Tiempo Total:</span>
-                <span class="stat-value" id="playbookTotalTime">00:00</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Pasos Completados:</span>
-                <span class="stat-value" id="playbookCompletedSteps">0/6</span>
+            <div class="playbook-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Progreso:</span>
+                    <span class="stat-value" id="playbookProgress">0%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Pasos Completados:</span>
+                    <span class="stat-value" id="playbookCompletedSteps">0/6</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Tiempo Total:</span>
+                    <span class="stat-value" id="playbookTotalTime">00:00</span>
+                </div>
             </div>
         </div>
         <div class="playbook-actions">
-            <button id="resetPlaybook" class="btn-playbook">🔄 Reiniciar Simulación</button>
-            <button id="validatePlaybook" class="btn-playbook">✅ Validar Completitud</button>
+            <button id="resetPlaybook" class="btn-playbook">🔄 Reiniciar</button>
+            <button id="validatePlaybook" class="btn-playbook">✅ Validar</button>
         </div>
     `;
     
     playbookContainer.insertBefore(controls, playbookContainer.firstChild);
     
-    // Event handlers
-    document.getElementById('resetPlaybook').addEventListener('click', resetPlaybook);
-    document.getElementById('validatePlaybook').addEventListener('click', validatePlaybook);
-}
-
-function startStepTimer(stepNum) {
-    if (!playbookState.stepTimes[stepNum]) {
-        playbookState.stepTimes[stepNum] = {
-            start: Date.now(),
-            elapsed: 0
-        };
+    // Event listeners
+    const resetBtn = controls.querySelector('#resetPlaybook');
+    const validateBtn = controls.querySelector('#validatePlaybook');
+    
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetPlaybook);
     }
     
-    const timerInterval = setInterval(() => {
-        if (playbookState.stepTimes[stepNum]) {
-            const elapsed = Date.now() - playbookState.stepTimes[stepNum].start;
-            playbookState.stepTimes[stepNum].elapsed = elapsed;
-            updateStepTimer(stepNum, elapsed);
-        } else {
-            clearInterval(timerInterval);
-        }
-    }, 1000);
-}
-
-function stopStepTimer(stepNum) {
-    if (playbookState.stepTimes[stepNum]) {
-        playbookState.stepTimes[stepNum].elapsed = Date.now() - playbookState.stepTimes[stepNum].start;
+    if (validateBtn) {
+        validateBtn.addEventListener('click', validatePlaybook);
     }
 }
 
-function updateStepTimer(stepNum, elapsed) {
-    const timerValue = document.querySelector(`.timer-value[data-step="${stepNum}"]`);
-    if (timerValue) {
-        const minutes = Math.floor(elapsed / 60000);
-        const seconds = Math.floor((elapsed % 60000) / 1000);
-        timerValue.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-}
-
-function markStepComplete(stepNum) {
-    if (!playbookState.completedSteps.includes(stepNum)) {
-        playbookState.completedSteps.push(stepNum);
-    }
-    
-    const step = document.querySelector(`.interactive-step[data-step="${stepNum}"]`);
-    if (step) {
-        step.classList.add('completed');
-    }
-}
-
-function markStepIncomplete(stepNum) {
-    playbookState.completedSteps = playbookState.completedSteps.filter(s => s !== stepNum);
-    
-    const step = document.querySelector(`.interactive-step[data-step="${stepNum}"]`);
-    if (step) {
-        step.classList.remove('completed');
-    }
-}
-
+// Actualizar progreso
 function updatePlaybookProgress() {
     const totalSteps = document.querySelectorAll('.interactive-step').length;
     const completed = playbookState.completedSteps.length;
-    const percentage = totalSteps > 0 ? (completed / totalSteps) * 100 : 0;
+    const percentage = totalSteps > 0 ? Math.round((completed / totalSteps) * 100) : 0;
     
-    // Update progress bar
+    // Barra de progreso
     const progressFill = document.getElementById('playbookProgressFill');
     if (progressFill) {
         progressFill.style.width = percentage + '%';
+        progressFill.style.transition = 'width 0.3s ease';
     }
     
-    // Update stats
+    // Estadísticas
     const progressValue = document.getElementById('playbookProgress');
     if (progressValue) {
-        progressValue.textContent = Math.round(percentage) + '%';
+        progressValue.textContent = percentage + '%';
     }
     
     const completedSteps = document.getElementById('playbookCompletedSteps');
@@ -212,10 +297,14 @@ function updatePlaybookProgress() {
         completedSteps.textContent = `${completed}/${totalSteps}`;
     }
     
-    // Calculate total time
+    // Tiempo total
     let totalTime = 0;
-    Object.values(playbookState.stepTimes).forEach(time => {
-        totalTime += time.elapsed || 0;
+    Object.values(playbookState.stepTimers).forEach(timer => {
+        if (timer.elapsed) {
+            totalTime += timer.elapsed;
+        } else if (timer.start) {
+            totalTime += (Date.now() - timer.start);
+        }
     });
     
     const totalTimeElement = document.getElementById('playbookTotalTime');
@@ -226,48 +315,138 @@ function updatePlaybookProgress() {
     }
 }
 
+// Reiniciar simulación
 function resetPlaybook() {
-    if (confirm('¿Reiniciar la simulación del playbook? Se perderá el progreso actual.')) {
-        playbookState = {
-            currentStep: 0,
-            completedSteps: [],
-            startTime: null,
-            stepTimes: {}
-        };
-        
-        // Reset checkboxes
-        document.querySelectorAll('.step-checkbox').forEach(cb => {
-            cb.checked = false;
-        });
-        
-        // Reset step classes
-        document.querySelectorAll('.interactive-step').forEach(step => {
-            step.classList.remove('completed');
-        });
-        
-        // Reset timers
-        document.querySelectorAll('.timer-value').forEach(timer => {
-            timer.textContent = '00:00';
-        });
-        
-        updatePlaybookProgress();
+    if (!confirm('¿Reiniciar la simulación? Se perderá todo el progreso.')) {
+        return;
     }
+    
+    resetPlaybookState();
+    
+    // Resetear checkboxes
+    document.querySelectorAll('.step-checkbox').forEach(cb => {
+        cb.checked = false;
+    });
+    
+    // Resetear clases
+    document.querySelectorAll('.interactive-step').forEach(step => {
+        step.classList.remove('completed', 'expanded');
+        const content = step.querySelector('.step-content');
+        if (content) {
+            content.style.display = 'none';
+        }
+        const toggle = step.querySelector('.step-toggle');
+        if (toggle) {
+            toggle.textContent = '▼';
+        }
+    });
+    
+    // Resetear timers
+    document.querySelectorAll('.timer-value').forEach(timer => {
+        timer.textContent = '00:00';
+    });
+    
+    updatePlaybookProgress();
 }
 
+// Resetear estado
+function resetPlaybookState() {
+    // Limpiar todos los timers
+    Object.values(playbookState.stepTimers).forEach(timer => {
+        if (timer.interval) {
+            clearInterval(timer.interval);
+        }
+    });
+    
+    playbookState = {
+        currentStep: 0,
+        completedSteps: [],
+        startTime: null,
+        stepTimers: {},
+        isActive: false
+    };
+}
+
+// Validar completitud
 function validatePlaybook() {
     const totalSteps = document.querySelectorAll('.interactive-step').length;
     const completed = playbookState.completedSteps.length;
     
     if (completed === totalSteps) {
-        alert('✅ ¡Excelente! Todos los pasos del playbook han sido completados correctamente.');
+        alert('✅ ¡Excelente! Has completado todos los pasos del playbook correctamente.\n\nEsto demuestra que entiendes el proceso completo de respuesta a incidentes.');
     } else {
         const missing = totalSteps - completed;
-        alert(`⚠️ Faltan ${missing} paso(s) por completar. Por favor, complete todos los pasos antes de finalizar.`);
+        alert(`⚠️ Faltan ${missing} paso(s) por completar.\n\nPor favor, revisa y completa todos los pasos del playbook para finalizar la simulación.`);
     }
 }
 
-// Initialize on DOM ready
+// Observar cuando la slide 4 se vuelve activa
+function observeSlide4() {
+    const slide4 = document.querySelector('.slide[data-slide="4"]');
+    if (!slide4) {
+        // Reintentar después de un delay
+        setTimeout(observeSlide4, 500);
+        return;
+    }
+    
+    // Función para verificar y actualizar estado
+    function checkSlideState() {
+        const isActive = slide4.classList.contains('active');
+        
+        if (isActive && !playbookState.isActive) {
+            // Slide 4 se activó
+            playbookState.isActive = true;
+            setTimeout(() => {
+                initializePlaybookSimulation();
+            }, 300);
+        } else if (!isActive && playbookState.isActive) {
+            // Slide 4 se desactivó
+            playbookState.isActive = false;
+            resetPlaybookState();
+        }
+    }
+    
+    // Usar MutationObserver para detectar cuando la slide se activa
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                checkSlideState();
+            }
+        });
+    });
+    
+    observer.observe(slide4, {
+        attributes: true,
+        attributeFilter: ['class']
+    });
+    
+    // Verificar estado inicial
+    checkSlideState();
+    
+    // También verificar periódicamente (por si acaso)
+    setInterval(checkSlideState, 1000);
+}
+
+// Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-    // Wait for playbook to be loaded
-    setTimeout(initializePlaybookSimulation, 500);
+    observeSlide4();
+    
+    // También escuchar cambios de slide desde script.js usando MutationObserver
+    // El observer ya maneja esto, pero agregamos un listener adicional para cambios directos
+    document.addEventListener('slideChanged', (e) => {
+        const slideNumber = e.detail?.slideNumber;
+        if (slideNumber === 4) {
+            if (!playbookState.isActive) {
+                playbookState.isActive = true;
+                setTimeout(() => {
+                    initializePlaybookSimulation();
+                }, 300);
+            }
+        } else {
+            if (playbookState.isActive) {
+                playbookState.isActive = false;
+                resetPlaybookState();
+            }
+        }
+    });
 });

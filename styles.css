@@ -5305,8 +5305,65 @@ body.light-theme .presentation-container::after {
     backdrop-filter: blur(10px);
     border: 2px solid var(--glass-border);
     border-radius: var(--radius-lg);
-    padding: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.playbook-instructions {
+    background: rgba(0, 102, 204, 0.1);
+    border: 2px solid rgba(0, 102, 204, 0.3);
+    border-radius: var(--radius-md);
+    padding: 16px;
     margin-bottom: 20px;
+}
+
+.playbook-instructions h4 {
+    color: var(--uai-light-blue);
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.playbook-instructions p {
+    color: var(--text-light);
+    margin: 0 0 10px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.playbook-instructions ul {
+    margin: 10px 0 0 0;
+    padding-left: 24px;
+    list-style: none;
+}
+
+.playbook-instructions li {
+    color: var(--text-light);
+    margin: 8px 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    position: relative;
+    padding-left: 20px;
+}
+
+.playbook-instructions li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--uai-gold);
+    font-weight: bold;
+}
+
+.playbook-instructions li strong {
+    color: var(--uai-gold);
+}
+
+.playbook-progress-section {
+    margin: 20px 0;
 }
 
 .playbook-progress-bar {
@@ -5453,8 +5510,25 @@ body.light-theme .presentation-container::after {
 .interactive-step .step-content {
     display: none;
     margin-top: 15px;
-    padding-top: 15px;
+    padding: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.interactive-step.expanded .step-content {
+    display: block;
+    animation: slideDown 0.3s ease-out;
 }
 
 .step-header {
@@ -5462,13 +5536,20 @@ body.light-theme .presentation-container::after {
     align-items: center;
     gap: 15px;
     cursor: pointer;
-    padding: 10px;
+    padding: 12px;
     border-radius: var(--radius-md);
     transition: all 0.3s ease;
+    user-select: none;
+    position: relative;
 }
 
 .step-header:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(2px);
+}
+
+.step-header:active {
+    transform: translateX(0);
 }
 
 .step-toggle {
